@@ -1,6 +1,5 @@
 '''
-数据处理采用混合采样（上采样少数类+下采样多数类）
-使用One-Class SVM进行异常检测
+使用One-Class SVM进行异常检测（原始数据）
 '''
 import pandas as pd
 import numpy as np
@@ -99,8 +98,10 @@ def train_ocsvm_model(X_train, X_test, y_train, y_test):
     在这个实现中，我们使用标签0作为正常类，标签1作为异常类
     """
     # 创建One-Class SVM分类器
+    # 使用网格搜索得到的最佳参数
     # nu参数控制支持向量的比例和决策边界的严格程度，范围在0到1之间
-    ocsvm_model = OneClassSVM(kernel='rbf', nu=0.01, gamma='auto')
+    # gamma参数使用'scale'能更好地适应特征尺度
+    ocsvm_model = OneClassSVM(kernel='rbf', nu=0.1, gamma='scale')
     
     # 注意：One-Class SVM是单类分类器，通常只用正常类（标签0）来训练
     # 我们假设标签0代表正常样本，标签1代表异常样本
@@ -154,12 +155,12 @@ def plot_roc_curve(y_test, y_pred_score):
     plt.ylim([0.0, 1.05])
     plt.xlabel('假正率 (False Positive Rate)')
     plt.ylabel('真正率 (True Positive Rate)')
-    plt.title('One-Class SVM模型ROC曲线（混合采样）')
+    plt.title('One-Class SVM模型ROC曲线（原始数据）')
     plt.legend(loc="lower right")
     plt.grid(True, alpha=0.3)
     
     # 保存图片到fig文件夹
-    plt.savefig('fig/roc_ocsvm_combined.png', dpi=300, bbox_inches='tight')
+    plt.savefig('fig/roc_ocsvm_original.png', dpi=300, bbox_inches='tight')
     plt.show()
     
     print(f"ROC-AUC值: {roc_auc:.4f}")
@@ -177,7 +178,7 @@ def plot_confusion_matrix(y_test, y_pred):
     # 绘制混淆矩阵热力图
     plt.figure(figsize=(8, 6))
     plt.imshow(cm, cmap='Blues')
-    plt.title('Confusion Table of One-Class SVM (Combined Sampling)')
+    plt.title('Confusion Table of One-Class SVM (Original Data)')
     plt.xlabel('Predict label')
     plt.ylabel('Truth label')
     plt.yticks(range(2), [0, 1])
@@ -194,7 +195,7 @@ def plot_confusion_matrix(y_test, y_pred):
             plt.text(i, j, value, verticalalignment='center', horizontalalignment='center', color=color)
     
     # 保存图片到fig文件夹
-    plt.savefig('fig/confusion_matrix_ocsvm_combined.png', bbox_inches='tight', dpi=300)
+    plt.savefig('fig/confusion_matrix_ocsvm_original.png', bbox_inches='tight', dpi=300)
     plt.show()
     
     # 计算各项指标
@@ -214,9 +215,9 @@ def plot_confusion_matrix(y_test, y_pred):
 # 主函数
 def main():
     """
-    主函数：执行完整的One-Class SVM模型训练流程（混合采样）
+    主函数：执行完整的One-Class SVM模型训练流程（原始数据）
     """
-    print("=== One-Class SVM异常检测模型训练（混合采样） ===\n")
+    print("=== One-Class SVM异常检测模型训练（原始数据） ===\n")
     
     # 1. 加载数据
     print("步骤1: 加载数据")
@@ -226,17 +227,13 @@ def main():
     print("\n步骤2: 数据预处理")
     X, y = preprocess_data(data)
     
-    # 3. 处理数据不平衡（混合采样）
-    print("\n步骤3: 处理数据不平衡（混合采样）")
-    X_balanced, y_balanced = handle_imbalance_combined(X, y)
-    
-    # 4. 划分训练集和测试集
-    print("\n步骤4: 划分训练集和测试集")
+    # 3. 划分训练集和测试集
+    print("\n步骤3: 划分训练集和测试集")
     X_train, X_test, y_train, y_test = train_test_split(
-        X_balanced, y_balanced, 
+        X, y, 
         test_size=0.2, 
         random_state=42, 
-        stratify=y_balanced
+        stratify=y
     )
     
     print(f"训练集大小: {X_train.shape[0]}")
@@ -257,8 +254,8 @@ def main():
     plot_confusion_matrix(y_test, y_pred)
     
     print("\n=== 模型训练完成 ===")
-    print("ROC曲线已保存为: fig/roc_ocsvm_combined.png")
-    print("混淆矩阵已保存为: fig/confusion_matrix_ocsvm_combined.png")
+    print("ROC曲线已保存为: fig/roc_ocsvm_original.png")
+    print("混淆矩阵已保存为: fig/confusion_matrix_ocsvm_original.png")
 
 if __name__ == "__main__":
     main()
