@@ -1,12 +1,11 @@
-'''
-数据处理采用混合采样（上采样少数类+下采样多数类）
-'''
+'''数据处理采用混合采样（上采样少数类+下采样多数类）使用逻辑回归分类器进行分类（修复数据泄露）'''
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
-from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
 from sklearn.preprocessing import StandardScaler
 from imblearn.combine import SMOTEENN
@@ -37,26 +36,23 @@ def load_data():
     
     return data
 
-# 数据预处理
+# 数据预处理 - 仅分离特征和标签（不包含标准化，避免数据泄露）
 def preprocess_data(data):
     """
-    数据预处理
+    数据预处理：仅分离特征和标签
+    标准化将在划分训练集后单独进行
     """
     # 分离特征和标签
     X = data[['feature']].values
     y = data['label'].values
     
-    # 标准化特征
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    
-    return X_scaled, y
+    return X, y
 
 # 处理数据不平衡问题 - SMOTEENN混合采样
 def handle_imbalance_combined(X, y):
     """
     处理数据不平衡问题 - SMOTEENN混合采样
-    SMOTEENN = SMOTE上采样 + Edited Nearest Neighbors下采样
+    SMOTEENN = SMOTE上采样 + Edited Nearest Neighbours下采样
     """
     print(f"处理前 - 总样本数: {len(y)}")
     print(f"处理前 - 标签分布:\n{pd.Series(y).value_counts()}")
@@ -90,21 +86,24 @@ def handle_imbalance_combined(X, y):
     
     return X_resampled, y_resampled
 
-# 训练svm模型
-def train_svm_model(X_train, X_test, y_train, y_test):
+# 训练逻辑回归模型
+def train_lr_model(X_train, X_test, y_train, y_test):
     """
-    训练svm模型并评估性能
+    训练逻辑回归模型并评估性能
     """
-    # 创建svm分类器
-    svm_model = SVC(kernel='rbf', probability=True, random_state=42)
+    # 创建逻辑回归分类器
+    lr_model = LogisticRegression(
+        random_state=42,
+        max_iter=1000
+    )
     
     # 训练模型
-    print("开始训练svm模型...")
-    svm_model.fit(X_train, y_train)
+    print("开始训练逻辑回归模型...")
+    lr_model.fit(X_train, y_train)
     
     # 预测
-    y_pred = svm_model.predict(X_test)
-    y_pred_proba = svm_model.predict_proba(X_test)[:, 1]
+    y_pred = lr_model.predict(X_test)
+    y_pred_proba = lr_model.predict_proba(X_test)[:, 1]
     
     # 评估模型
     print("\n模型评估结果：")
@@ -133,12 +132,12 @@ def plot_roc_curve(y_test, y_pred_proba):
     plt.ylim([0.0, 1.05])
     plt.xlabel('假正率 (False Positive Rate)')
     plt.ylabel('真正率 (True Positive Rate)')
-    plt.title('svm模型ROC曲线')
+    plt.title('逻辑回归模型ROC曲线')
     plt.legend(loc="lower right")
     plt.grid(True, alpha=0.3)
     
     # 保存图片到fig文件夹
-    plt.savefig('fig/roc_svm_combined.png', dpi=300, bbox_inches='tight')
+    plt.savefig('fig/roc_new_lr.png', dpi=300, bbox_inches='tight')
     plt.show()
     
     print(f"ROC-AUC值: {roc_auc:.4f}")
@@ -156,7 +155,7 @@ def plot_confusion_matrix(y_test, y_pred):
     # 绘制混淆矩阵热力图
     plt.figure(figsize=(8, 6))
     plt.imshow(cm, cmap='Blues')
-    plt.title('Confusion Table of SVM')
+    plt.title('Confusion Table of Logistic Regression')
     plt.xlabel('Predict label')
     plt.ylabel('Truth label')
     plt.yticks(range(2), [0, 1])
@@ -173,7 +172,7 @@ def plot_confusion_matrix(y_test, y_pred):
             plt.text(i, j, value, verticalalignment='center', horizontalalignment='center', color=color)
     
     # 保存图片到fig文件夹
-    plt.savefig('fig/confusion_matrix_svm_combined.png', bbox_inches='tight', dpi=300)
+    plt.savefig('fig/confusion_matrix_new_lr.png', bbox_inches='tight', dpi=300)
     plt.show()
     
     # 计算各项指标
@@ -193,51 +192,71 @@ def plot_confusion_matrix(y_test, y_pred):
 # 主函数
 def main():
     """
-    主函数：执行完整的svm模型训练流程（混合采样）
+    主函数：执行完整的逻辑回归模型训练流程（修复数据泄露）
+    正确的数据处理顺序：
+    1. 加载数据
+    2. 分离特征和标签
+    3. 划分训练集和测试集
+    4. 对训练集单独进行标准化
+    5. 使用训练集的标准化参数对测试集进行转换
+    6. 对训练集进行混合采样
+    7. 训练模型并评估
     """
-    print("=== svm二分类模型训练（混合采样） ===\n")
+    print("=== 逻辑回归二分类模型训练（修复数据泄露） ===\n")
     
     # 1. 加载数据
     print("步骤1: 加载数据")
     data = load_data()
     
-    # 2. 数据预处理
-    print("\n步骤2: 数据预处理")
+    # 2. 数据预处理 - 仅分离特征和标签
+    print("\n步骤2: 数据预处理 - 分离特征和标签")
     X, y = preprocess_data(data)
     
-    # 3. 处理数据不平衡（混合采样）
-    print("\n步骤3: 处理数据不平衡（混合采样）")
-    X_balanced, y_balanced = handle_imbalance_combined(X, y)
-    
-    # 4. 划分训练集和测试集
-    print("\n步骤4: 划分训练集和测试集")
-    X_train, X_test, y_train, y_test = train_test_split(
-        X_balanced, y_balanced, 
+    # 3. 先划分训练集和测试集（关键：避免数据泄露）
+    print("\n步骤3: 划分训练集和测试集")
+    X_train_raw, X_test_raw, y_train_raw, y_test_raw = train_test_split(
+        X, y, 
         test_size=0.2, 
         random_state=42, 
-        stratify=y_balanced
+        stratify=y
     )
     
-    print(f"训练集大小: {X_train.shape[0]}")
-    print(f"测试集大小: {X_test.shape[0]}")
-    print(f"训练集标签分布: {np.unique(y_train, return_counts=True)}")
-    print(f"测试集标签分布: {np.unique(y_test, return_counts=True)}")
+    print(f"训练集大小: {X_train_raw.shape[0]}")
+    print(f"测试集大小: {X_test_raw.shape[0]}")
+    print(f"训练集标签分布: {np.unique(y_train_raw, return_counts=True)}")
+    print(f"测试集标签分布: {np.unique(y_test_raw, return_counts=True)}")
     
-    # 5. 训练svm模型
-    print("\n步骤5: 训练svm模型")
-    y_pred, y_pred_proba = train_svm_model(X_train, X_test, y_train, y_test)
+    # 4. 对训练集单独进行标准化
+    print("\n步骤4: 对训练集进行标准化")
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train_raw)
     
-    # 6. 绘制ROC曲线
-    print("\n步骤6: 绘制ROC曲线")
-    plot_roc_curve(y_test, y_pred_proba)
+    # 5. 使用训练集的标准化参数对测试集进行转换
+    print("步骤5: 使用训练集的标准化参数对测试集进行转换")
+    X_test_scaled = scaler.transform(X_test_raw)
     
-    # 7. 绘制混淆矩阵
-    print("\n步骤7: 绘制混淆矩阵")
-    plot_confusion_matrix(y_test, y_pred)
+    # 6. 仅对训练集进行混合采样处理
+    print("\n步骤6: 对训练集进行混合采样处理")
+    X_train_resampled, y_train_resampled = handle_imbalance_combined(X_train_scaled, y_train_raw)
+    
+    # 7. 训练逻辑回归模型
+    print("\n步骤7: 训练逻辑回归模型")
+    y_pred, y_pred_proba = train_lr_model(
+        X_train_resampled, X_test_scaled,  # 使用处理后的训练集和原始分布的测试集
+        y_train_resampled, y_test_raw
+    )
+    
+    # 8. 绘制ROC曲线
+    print("\n步骤8: 绘制ROC曲线")
+    plot_roc_curve(y_test_raw, y_pred_proba)
+    
+    # 9. 绘制混淆矩阵
+    print("\n步骤9: 绘制混淆矩阵")
+    plot_confusion_matrix(y_test_raw, y_pred)
     
     print("\n=== 模型训练完成 ===")
-    print("ROC曲线已保存为: fig/roc_svm_combined.png")
-    print("混淆矩阵已保存为: fig/confusion_matrix_svm_combined.png")
+    print("ROC曲线已保存为: fig/roc_new_lr.png")
+    print("混淆矩阵已保存为: fig/confusion_matrix_new_lr.png")
 
 if __name__ == "__main__":
     main()

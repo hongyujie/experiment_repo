@@ -131,7 +131,7 @@ def plot_roc_curve(y_test, y_pred_score):
     plt.ylim([0.0, 1.05])
     plt.xlabel('假正率 (False Positive Rate)')
     plt.ylabel('真正率 (True Positive Rate)')
-    plt.title('One-Class SVM模型ROC曲线（原始数据）')
+    plt.title('OCSVM模型ROC曲线')
     plt.legend(loc="lower right")
     plt.grid(True, alpha=0.3)
     
@@ -154,7 +154,7 @@ def plot_confusion_matrix(y_test, y_pred):
     # 绘制混淆矩阵热力图
     plt.figure(figsize=(8, 6))
     plt.imshow(cm, cmap='Blues')
-    plt.title('Confusion Table of One-Class SVM (Original Data)')
+    plt.title('Confusion Table of OCSVM')
     plt.xlabel('Predict label')
     plt.ylabel('Truth label')
     plt.yticks(range(2), [0, 1])

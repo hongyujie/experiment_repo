@@ -133,7 +133,7 @@ def plot_roc_curve(y_test, y_pred_proba):
     plt.ylim([0.0, 1.05])
     plt.xlabel('假正率 (False Positive Rate)')
     plt.ylabel('真正率 (True Positive Rate)')
-    plt.title('朴素贝叶斯模型ROC曲线（混合采样）')
+    plt.title('朴素贝叶斯模型ROC曲线')
     plt.legend(loc="lower right")
     plt.grid(True, alpha=0.3)
     
@@ -156,7 +156,7 @@ def plot_confusion_matrix(y_test, y_pred):
     # 绘制混淆矩阵热力图
     plt.figure(figsize=(8, 6))
     plt.imshow(cm, cmap='Blues')
-    plt.title('Confusion Table of Naive Bayes (Combined Sampling)')
+    plt.title('Confusion Table of Naive Bayes')
     plt.xlabel('Predict label')
     plt.ylabel('Truth label')
     plt.yticks(range(2), [0, 1])

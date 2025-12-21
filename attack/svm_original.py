@@ -1,6 +1,5 @@
-'''
-数据处理采用混合采样（上采样少数类+下采样多数类）
-'''
+'''SVM模型 - 仅使用原始数据，不进行任何预处理（标准化、采样等）'''
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,10 +7,6 @@ import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
-from sklearn.preprocessing import StandardScaler
-from imblearn.combine import SMOTEENN
-from imblearn.over_sampling import SMOTE
-from imblearn.under_sampling import EditedNearestNeighbours
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -37,69 +32,34 @@ def load_data():
     
     return data
 
-# 数据预处理
+# 数据预处理 - 仅分离特征和标签（不包含任何预处理）
 def preprocess_data(data):
     """
-    数据预处理
+    数据预处理：仅分离特征和标签
+    不进行任何标准化、缩放或采样处理
     """
     # 分离特征和标签
     X = data[['feature']].values
     y = data['label'].values
     
-    # 标准化特征
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    
-    return X_scaled, y
+    return X, y
 
-# 处理数据不平衡问题 - SMOTEENN混合采样
-def handle_imbalance_combined(X, y):
+# 训练SVM模型
+def train_svm_model(X_train, X_test, y_train, y_test):
     """
-    处理数据不平衡问题 - SMOTEENN混合采样
-    SMOTEENN = SMOTE上采样 + Edited Nearest Neighbors下采样
+    训练SVM模型并评估性能
+    使用原始数据，不进行任何预处理
     """
-    print(f"处理前 - 总样本数: {len(y)}")
-    print(f"处理前 - 标签分布:\n{pd.Series(y).value_counts()}")
-    
-    # 创建SMOTEENN采样器
-    # 分别创建SMOTE和ENN对象
-    smote = SMOTE(
-        sampling_strategy='auto',
-        random_state=42,
-        k_neighbors=5
-    )
-    
-    enn = EditedNearestNeighbours(
-        sampling_strategy='auto',
-        kind_sel='all',
-        n_neighbors=3
-    )
-    
-    # 创建SMOTEENN组合采样器
-    smoteenn = SMOTEENN(
-        smote=smote,
-        enn=enn,
+    # 创建SVM分类器
+    # 使用默认参数，rbf核，不进行任何预处理
+    svm_model = SVC(
+        kernel='rbf', 
+        probability=True, 
         random_state=42
     )
     
-    # 应用SMOTEENN采样
-    X_resampled, y_resampled = smoteenn.fit_resample(X, y)
-    
-    print(f"处理后 - 总样本数: {len(y_resampled)}")
-    print(f"处理后 - 标签分布:\n{pd.Series(y_resampled).value_counts()}")
-    
-    return X_resampled, y_resampled
-
-# 训练svm模型
-def train_svm_model(X_train, X_test, y_train, y_test):
-    """
-    训练svm模型并评估性能
-    """
-    # 创建svm分类器
-    svm_model = SVC(kernel='rbf', probability=True, random_state=42)
-    
     # 训练模型
-    print("开始训练svm模型...")
+    print("开始训练SVM模型...")
     svm_model.fit(X_train, y_train)
     
     # 预测
@@ -133,12 +93,12 @@ def plot_roc_curve(y_test, y_pred_proba):
     plt.ylim([0.0, 1.05])
     plt.xlabel('假正率 (False Positive Rate)')
     plt.ylabel('真正率 (True Positive Rate)')
-    plt.title('svm模型ROC曲线')
+    plt.title('SVM模型ROC曲线（原始数据）')
     plt.legend(loc="lower right")
     plt.grid(True, alpha=0.3)
     
     # 保存图片到fig文件夹
-    plt.savefig('fig/roc_svm_combined.png', dpi=300, bbox_inches='tight')
+    plt.savefig('fig/roc_svm_original.png', dpi=300, bbox_inches='tight')
     plt.show()
     
     print(f"ROC-AUC值: {roc_auc:.4f}")
@@ -156,7 +116,7 @@ def plot_confusion_matrix(y_test, y_pred):
     # 绘制混淆矩阵热力图
     plt.figure(figsize=(8, 6))
     plt.imshow(cm, cmap='Blues')
-    plt.title('Confusion Table of SVM')
+    plt.title('Confusion Table of SVM (Original Data)')
     plt.xlabel('Predict label')
     plt.ylabel('Truth label')
     plt.yticks(range(2), [0, 1])
@@ -173,7 +133,7 @@ def plot_confusion_matrix(y_test, y_pred):
             plt.text(i, j, value, verticalalignment='center', horizontalalignment='center', color=color)
     
     # 保存图片到fig文件夹
-    plt.savefig('fig/confusion_matrix_svm_combined.png', bbox_inches='tight', dpi=300)
+    plt.savefig('fig/confusion_matrix_svm_original.png', bbox_inches='tight', dpi=300)
     plt.show()
     
     # 计算各项指标
@@ -193,29 +153,31 @@ def plot_confusion_matrix(y_test, y_pred):
 # 主函数
 def main():
     """
-    主函数：执行完整的svm模型训练流程（混合采样）
+    主函数：执行完整的SVM模型训练流程（仅使用原始数据）
+    数据处理顺序：
+    1. 加载数据
+    2. 分离特征和标签
+    3. 划分训练集和测试集
+    4. 直接使用原始数据训练SVM模型
+    5. 评估模型性能
     """
-    print("=== svm二分类模型训练（混合采样） ===\n")
+    print("=== SVM二分类模型训练（仅使用原始数据） ===\n")
     
     # 1. 加载数据
     print("步骤1: 加载数据")
     data = load_data()
     
-    # 2. 数据预处理
-    print("\n步骤2: 数据预处理")
+    # 2. 数据预处理 - 仅分离特征和标签
+    print("\n步骤2: 数据预处理 - 仅分离特征和标签（无任何预处理）")
     X, y = preprocess_data(data)
     
-    # 3. 处理数据不平衡（混合采样）
-    print("\n步骤3: 处理数据不平衡（混合采样）")
-    X_balanced, y_balanced = handle_imbalance_combined(X, y)
-    
-    # 4. 划分训练集和测试集
-    print("\n步骤4: 划分训练集和测试集")
+    # 3. 划分训练集和测试集
+    print("\n步骤3: 划分训练集和测试集")
     X_train, X_test, y_train, y_test = train_test_split(
-        X_balanced, y_balanced, 
+        X, y, 
         test_size=0.2, 
         random_state=42, 
-        stratify=y_balanced
+        stratify=y
     )
     
     print(f"训练集大小: {X_train.shape[0]}")
@@ -223,21 +185,24 @@ def main():
     print(f"训练集标签分布: {np.unique(y_train, return_counts=True)}")
     print(f"测试集标签分布: {np.unique(y_test, return_counts=True)}")
     
-    # 5. 训练svm模型
-    print("\n步骤5: 训练svm模型")
-    y_pred, y_pred_proba = train_svm_model(X_train, X_test, y_train, y_test)
+    # 4. 训练SVM模型（直接使用原始数据）
+    print("\n步骤4: 训练SVM模型（直接使用原始数据，无任何预处理）")
+    y_pred, y_pred_proba = train_svm_model(
+        X_train, X_test, 
+        y_train, y_test
+    )
     
-    # 6. 绘制ROC曲线
-    print("\n步骤6: 绘制ROC曲线")
+    # 5. 绘制ROC曲线
+    print("\n步骤5: 绘制ROC曲线")
     plot_roc_curve(y_test, y_pred_proba)
     
-    # 7. 绘制混淆矩阵
-    print("\n步骤7: 绘制混淆矩阵")
+    # 6. 绘制混淆矩阵
+    print("\n步骤6: 绘制混淆矩阵")
     plot_confusion_matrix(y_test, y_pred)
     
     print("\n=== 模型训练完成 ===")
-    print("ROC曲线已保存为: fig/roc_svm_combined.png")
-    print("混淆矩阵已保存为: fig/confusion_matrix_svm_combined.png")
+    print("ROC曲线已保存为: fig/roc_svm_original.png")
+    print("混淆矩阵已保存为: fig/confusion_matrix_svm_original.png")
 
 if __name__ == "__main__":
     main()
