@@ -52,7 +52,7 @@ def preprocess_data(data):
 
 
 # 训练One-Class SVM模型
-def train_ocsvm_model(X_train, X_test, y_train, y_test, nu=0.05, custom_threshold=None):
+def train_ocsvm_model(X_train, X_test, y_train, y_test, nu=0.1, custom_threshold=None):
     """
     训练One-Class SVM模型并评估性能
     One-Class SVM是一种异常检测算法，主要用于检测离群点
@@ -191,7 +191,7 @@ def plot_confusion_matrix(y_test, y_pred):
 
 
 # 主函数
-def main(threshold=3.5):
+def main(threshold=-1.0):
     """
     主函数：执行完整的One-Class SVM模型训练流程（原始数据）
     
