@@ -1,44 +1,105 @@
 \documentclass{article}
-% 核心配置（Overleaf兼容）
-\usepackage[fontset=noto]{ctex} % 中文字体
+% 核心配置（Windows兼容）
+\usepackage[fontset=windows]{ctex} % 中文字体
 \usepackage{geometry}
-\geometry{a4paper, top=2cm, bottom=2cm, left=2cm, right=2cm}
-\usepackage{framed} % 用于生成大黑框
-\setlength{\FrameRule}{1pt} % 大黑框边框粗细（1pt=明显黑框）
-\setlength{\FrameSep}{1em} % 框内内容与边框的间距（避免拥挤）
+\usepackage{ulem} % 提供更好的下划线支持
+\usepackage{multicol} % 用于双栏排版
+\geometry{a4paper, top=2cm, bottom=2.5cm, left=2cm, right=2cm}
 
+% 正文默认五号字
+\raggedbottom % 允许页面底部有不同高度，避免Underfull \vbox警告
 \begin{document}
 % 标题（居中加粗，匹配Word样式）
 \begin{center}
-    \bfseries \zihao{2} 宁波大学硕士研究生2025/2026学年第1学期期末考试试卷 \\
-    \bfseries \zihao{2} 答题纸及评分标准
+    \bfseries \zihao{3} 宁波大学硕士研究生\textbf{2025/2026}学年第\textbf{1}学期期末考试试卷 \\
+    \bfseries \zihao{3} 答题纸及评分标准
 \end{center}
 
 % 顶部信息栏（下划线占位符，和Word一致）
-\noindent 考试科目：多媒体信息系统 \quad 课程编号：\rule{2cm}{0.15mm} \quad 考卷类型：学术论文报告 \\
-\noindent 姓名：\rule{2cm}{0.15mm}（签名） \quad 学号：\rule{2cm}{0.15mm} \quad 阅卷教师：\rule{2cm}{0.15mm} \quad 成绩：\rule{2cm}{0.15mm}
+{\zihao{-4} % 设置为小四号字
+\noindent 考试科目：\uline{多媒体信息系统} \quad 课程编号：\rule{2cm}{0.15mm} \quad 考卷类型：学术论文报告 \\ 
+\noindent 姓名：\uline{洪玉杰} \quad 学号：\uline{2511100136} \quad 阅卷教师：\rule{2cm}{0.15mm} \quad 成绩：\rule{2cm}{0.15mm}
+}
 
-% “答案必须写在答题纸上”提示
-\vspace{0.5em}
-\noindent （答案必须写在答题纸上）
+% "答案必须写在答题纸上"提示
+\vspace{0.1em} % 减小垂直间距
+\begin{center}
+\textbf{（答案必须写在答题纸上）}
+\end{center}
+\vspace{-1.5em} % 调整与下方边框的距离
 
-% 大黑框区域（包裹考试要求+评分标准）
-\begin{framed}
-\noindent $\bullet$ 就目前多媒体信息系统领域的热点研究问题，撰写学术报告（包括研究性学术论文报告或综述性论文报告）（试卷总分为100分）。
+\setlength{\parindent}{2em}
+\begin{center}
+    \textbf{\zihao{-3} 基于深度学习的多模态行人重识别综述}
+\end{center}
 
-\noindent $\bullet$ 格式要求：可参照《电子与信息学报》等期刊论文格式。
+{\noindent \bfseries \zihao{-5} 摘\quad 要：}认识海洋、经略海洋离不开水声通信及网络技术的发展。该文对水声通信技术和水声通信网络进行综述，首先回顾了水声通信技术和水声通信网络的发展，总结了水声信道的特点。然后，对于水声通信技术中的
+非相干调制技术、相干调制技术以及以应用需求为导向的新型通信技术进行陈述。随后，对于水声通信网络中数
+据链路层媒介接入控制协议、网络层的路由协议和跨层设计进行分类探讨。最后，对目前水声通信及网络技术的
+不足进行总结，并且对未来水声通信及网络技术的发展进行
 
-\noindent $\bullet$ 内容要求：(1) 研究性学术论文报告：对该领域某一问题进行理论方法研究、实验分析与讨论等。(2) 综述性论文报告：对该领域某方面问题研究进展进行综述分析，讨论相关研究现状、存在问题，给出研究展望。
-
-\noindent $\bullet$ 学术报告篇幅：8000字以上。
-
-\noindent $\bullet$ 学术报告的文献引用：总数在30篇以上，其中，英文文献在18篇以上。
-
+{\noindent \bfseries \zihao{-5} 关键词：}水声通信； 水声通信网络技术； 调制解调；
 
 \vspace{1em}
-\noindent 评分标准：\\
-切题性：20\%，理论深度：50\%，创新性：15\%，内容完整性：15\% \\
-总分100分。
-\end{framed}
 
+\begin{center}
+    \textbf{\zihao{-3} Review of Multi-modal Pedestrian Recognition Based on Deep Learning}
+\end{center}
+
+{\noindent \bfseries \zihao{-5} Abstract：}
+The UAC technology and Underwater Acoustic Communication Network(UACN) are
+reviewed in this paper. Firstly, the development of underwater acoustic communication technology and
+underwater acoustic communication network is reviewed, and the characteristics of underwater acoustic channel
+is summarized. Then, the incoherent modulation technology, coherent modulation technology and new
+communication technology oriented to application requirements in underwater acoustic communication
+technology are described, and the data link layer media access control protocol, network layer routing protocol
+and cross-layer design in underwater acoustic communication network are classified and discussed.
+
+{
+\noindent \bfseries \zihao{-5} Keywords：}
+Underwater Acoustic Communication(UAC), 
+Modulation and Demodulation, Deep Learning, Multi-modal Pedestrian Recognition
+
+\begin{multicols}{2}
+{
+\noindent \bfseries \zihao{-4} 1\quad 引言}
+\par\indent 近年来，随着海洋强国战略的提出，国家大力发展海洋事业，作为水下无线通信的重要组成部
+分，水声通信及网络技术引起广泛关注。水声通信(Underwater Acoustic Communication, UAC)不仅在民用领域极大应用，在商业领域与军事领域等诸多方面也发挥着重要作用[1–4]。民用领域，水声通信及网络技术可用于监测水下环境和收集海洋数据。商业领域，该技术广泛用于遥控、遥测、数据回传、协同作业等。军事上，水声通信及网络技术
+也发挥着巨大作用，可用于寻找水下水雷、保护港口和潜艇、监控和监视等[5–8]。随着各个海洋大国科技水平的提高，构建空天地海潜一体化网络的进程势不可挡[9]。目前，空天地海的信息传输与集成技术已相对成熟，对海洋信息的需求也愈发强烈，要提高对海洋信息的获取能力，就离不开水声通信及网络技术的发展。
+水声通信技术在发送端把信息加载到声波中，通过声波将信息传输到接收端，水声通信是目前应用于水下环境中最成熟可靠的无线通信方式。陆地无线环境中电磁波通信和光通信占主导地位，但是在水下，这两种通信方式的表现不尽如人意。电磁波在水下衰减严重，且频率越高衰减越大，因此在水下，电磁波只能实现短距离的高速通信，不能满足远距离水下通信与组网的要求[10]。水下光通信通常使用蓝绿激光，这是因为蓝绿色激光(波长为470～570 nm)在水下传输时能量衰减很小，其衰减率约为0.155～0.5 dB/m[11]。水下激光通信工作频率高，传输速率可达千兆，传输时延低。但是，水下光损耗大，对水介质有很高要求，具有极强的方向性，而且海洋生物会对水下光通信造成极大干扰，建立长距离通信难度极大。声波在水下传播的速度可达1 500 m/s, 1 Hz～50 kHz的声衰减系数为10–4～10–2 dB/m[12,13]，低频率、高功率的声波可在水下传播数千公里，是实现水下远程无线通信的唯一手段[14]，因此，水声通信成为水下长距离通信的最佳和唯一选择。各种水下通信方式的优缺点如表1所示。随着点对点水声通信技术发展日趋成熟，以及复杂应用场景对水下信息传输技术提出更高要求，声通信网络(Underwater Acoustic Communication Network, UACN)技术得到了越来越多的关注与发展。水声通信网络与水声通信一样，在水下依靠声波传递信息。从硬件角度可分为广义和狭义两种：广义水声通信网络是由布放在水底、水中的通节点(包括固定的通信节点和装载在移动平台的通信节点)、水面浮标节点、水面移动平台、岸基通信平台以及通信卫星等构成的，其结构如图1所示；狭义水声通信网络由水下及水面部分组成，包括水底、水面以及水中的固定通信节点和自主水下潜器(Autonomous Underwater Vehicle, AUV)、水面浮标等搭载的水声通信节点构成。无论广义水声通信网络，还是狭义水声通信网络，相较于点对点水声通信，都能够增加通信覆盖范围，提升通信效率等，以适应更多、更复杂的任务场景[15]。本文中提到的水声通信网络都是指狭义水声通信网络。水声通信网络为确保能够有效而可靠地传输数据，
+按照一定的网络协议运行。将网络进行分层可降低网络协议设计的复杂性，参考国际标准化组织提出的开放系统互联(Open Systems Interconnection,OSI)模型和传输控制协议/因特网互联协议(Transmission Control Protocol/Internet Protocol,TCP/IP)[16]，实际应用中通常将水声通信网络层次划分为物理层、数据链路层和网络层， 图2为UACN, OSI以及TCP/IP 3种协议体系的对比。
+
+\vspace{1em}
+
+{\noindent \bfseries \zihao{-4} 2\quad 水声通信及网络技术的发展以及研究现状}\par
+{\noindent \bfseries \zihao{5} 2.1\quad 水声通信及网络技术的发展}\par
+{\noindent \bfseries \zihao{5} 2.1.1\quad 水声通信技术}\par \indent
+水声通信技术的早期历史可以追溯到20世纪
+50年代，经过几十年的发展，已经有了显著进步。
+当前，水声通信主要向高有效性和高可靠性发展。
+如图3所示，与无线电通信从1～5G的发展历程相
+似，水声通信技术的发展趋势概括地说是从模拟通
+信到数字通信，从非相干通信到相干通信，从单载
+波通信到多载波通信，从点对点通信到网络化通信。
+如今，水声通信已经发展到以全双工通信为代
+表的“5G” 技术[17]。水声通信发展初期，使用的
+大多是幅度调制(Amplitude Modulation, AM)和单
+边带调制(Single-Side Band, SSB)水下电话传递模
+拟信号。 20世纪80年代早期，水下数字频移键控
+(Frequency Shift Keying, FSK)技术得到应用，
+80年代后期出现相干水声通信[18]。 90年代，由于数
+字信号处理(Digital Signal Processing, DSP)
+芯片技术和数字通信理论的发展，一系列复杂的信
+道均衡技术的实现进一步推动相干水声通信技术的
+发展[19]。 20世纪90年代，美国Scripps海洋研究所
+率先提出了单载波相干水声通信技术[20]。从20世纪
+90年代中后期开始，以正交频分复用技术为主的多
+载波相干通信技术逐渐广泛应用于水声通信[21]。进
+入21世纪，多入多出(Multiple-Input MultipleOutput, MIMO)、全双工等技术的使用进一步提
+升了水声通信技术性能[22]。
+
+{\noindent \bfseries \zihao{5} 2.1.2\quad 国内外研究现状}\par \indent
+在水下，声波频率越高，衰减越大，因此水声通信可用带宽和通信距离相关：远距离带宽小，速率低；近距离带宽大，速率高。本节及下节介绍国内外水声通信技术研究现状，从近距离通信和中远距离通信两方面介绍，近程通信的通信距离为0～10 km，中远程通信的距离大于10 km。国外水声通信技术开展较早，美国、日本、俄罗斯、新加坡、欧盟等国家和组织都投入了大量人员与经费进行水声通信技术研究。近程水声通信方面，文献[23]使用时间反转判决反馈均衡器和正交幅度调制(Quadrature Amplitude Modulation,QAM)技术，在海试中，以60 kbit/s的数据速率实现了3 km的可靠通信。文献[24]使用128QAM在3.6 km距离实现70 kbit/s的最大数据速率，成功将数据从水下移动无人平台传输到水面舰艇。中远程水声通信方面， 2013年，文献[25]在北冰洋采用中心频率为900 Hz的相移键控(PhaseShiftKeying, PSK)信号，在560 km的距离上实现数据速率29.6 bit/s的通信导航。将直接序列扩频与双分编码技术进行结合，实现了550km内的深海远距离通信，通信速率为6.5 bit/s。
+
+\end{multicols}
 \end{document}

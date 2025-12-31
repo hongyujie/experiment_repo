@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.25)  31 DEC 2025 15:12
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.25)  31 DEC 2025 15:15
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**多媒体论文
-(./多媒体论文.tex
+**tex_demo
+(./tex_demo.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
 (d:/Computer Software/texlive/2025/texmf-dist/tex/latex/base/article.cls
@@ -228,15 +228,77 @@ Package: iftex 2024/12/12 v1.0g TeX engine tests
 \ULC@box=\box58
 Package: ulem 2019/11/18
 \ULdepth=\dimen185
-) (d:/Computer Software/texlive/2025/texmf-dist/tex/latex/framed/framed.sty
-Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
-\OuterFrameSep=\skip60
-\fb@frw=\dimen186
-\fb@frh=\dimen187
-\FrameRule=\dimen188
-\FrameSep=\dimen189
-) (./多媒体论文.aux)
-\openout1 = `多媒体论文.aux'.
+) (d:/Computer Software/texlive/2025/texmf-dist/tex/latex/tools/multicol.sty
+Package: multicol 2024/09/14 v1.9i multicolumn formatting (FMi)
+\c@tracingmulticols=\count301
+\mult@box=\box59
+\multicol@leftmargin=\dimen186
+\c@unbalance=\count302
+\c@collectmore=\count303
+\doublecol@number=\count304
+\multicoltolerance=\count305
+\multicolpretolerance=\count306
+\full@width=\dimen187
+\page@free=\dimen188
+\premulticols=\dimen189
+\postmulticols=\dimen190
+\multicolsep=\skip60
+\multicolbaselineskip=\skip61
+\partial@page=\box60
+\last@line=\box61
+\mc@boxedresult=\box62
+\maxbalancingoverflow=\dimen191
+\mult@rightbox=\box63
+\mult@grightbox=\box64
+\mult@firstbox=\box65
+\mult@gfirstbox=\box66
+\@tempa=\box67
+\@tempa=\box68
+\@tempa=\box69
+\@tempa=\box70
+\@tempa=\box71
+\@tempa=\box72
+\@tempa=\box73
+\@tempa=\box74
+\@tempa=\box75
+\@tempa=\box76
+\@tempa=\box77
+\@tempa=\box78
+\@tempa=\box79
+\@tempa=\box80
+\@tempa=\box81
+\@tempa=\box82
+\@tempa=\box83
+\@tempa=\box84
+\@tempa=\box85
+\@tempa=\box86
+\@tempa=\box87
+\@tempa=\box88
+\@tempa=\box89
+\@tempa=\box90
+\@tempa=\box91
+\@tempa=\box92
+\@tempa=\box93
+\@tempa=\box94
+\@tempa=\box95
+\@tempa=\box96
+\@tempa=\box97
+\@tempa=\box98
+\@tempa=\box99
+\@tempa=\box100
+\@tempa=\box101
+\@tempa=\box102
+\c@minrows=\count307
+\c@columnbadness=\count308
+\c@finalcolumnbadness=\count309
+\last@try=\dimen192
+\multicolovershoot=\dimen193
+\multicolundershoot=\dimen194
+\mult@nat@firstbox=\box103
+\colbreak@box=\box104
+\mc@col@check@num=\count310
+) (./tex_demo.aux)
+\openout1 = `tex_demo.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
@@ -347,31 +409,23 @@ LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-
-
 [1
 
 ]
-Overfull \vbox (1.751pt too high) detected at line 103
- []
 
-
-
-[2]
-
-[3] (./多媒体论文.aux)
+[2] (./tex_demo.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/07/14>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 6710 strings out of 475796
- 201300 string characters out of 5772143
- 632741 words of memory out of 5000000
- 29592 multiletter control sequences out of 15000+600000
+ 6784 strings out of 475796
+ 202583 string characters out of 5772143
+ 655454 words of memory out of 5000000
+ 29667 multiletter control sequences out of 15000+600000
  560793 words of font info for 65 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 93i,6n,111p,1022b,276s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 93i,5n,111p,1025b,346s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on 多媒体论文.pdf (3 pages).
+Output written on tex_demo.pdf (2 pages).
