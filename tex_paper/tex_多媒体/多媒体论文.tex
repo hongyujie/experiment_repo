@@ -1,0 +1,59 @@
+\documentclass{article}
+% 核心配置（Windows兼容）
+\usepackage[fontset=windows]{ctex} % 中文字体
+\usepackage{geometry}
+\usepackage{ulem} % 提供更好的下划线支持
+\geometry{a4paper, top=2cm, bottom=2cm, left=2cm, right=2cm}
+\usepackage{framed} % 用于生成大黑框
+\setlength{\FrameRule}{1pt} % 大黑框边框粗细（1pt=明显黑框）
+\setlength{\FrameSep}{1em} % 框内内容与边框的间距（避免拥挤）
+
+% 正文默认五号字
+\begin{document}
+% 标题（居中加粗，匹配Word样式）
+\begin{center}
+    \bfseries \zihao{3} 宁波大学硕士研究生\textbf{2025/2026}学年第\textbf{1}学期期末考试试卷 \\
+    \bfseries \zihao{3} 答题纸及评分标准
+\end{center}
+
+% 顶部信息栏（下划线占位符，和Word一致）
+{\zihao{-4} % 设置为小四号字
+\noindent 考试科目：\uline{多媒体信息系统} \quad 课程编号：\rule{2cm}{0.15mm} \quad 考卷类型：学术论文报告 \\ 
+\noindent 姓名：\uline{洪玉杰} \quad 学号：\uline{2511100136} \quad 阅卷教师：\rule{2cm}{0.15mm} \quad 成绩：\rule{2cm}{0.15mm}
+}
+
+% "答案必须写在答题纸上"提示
+\vspace{1.0em} % 减小垂直间距
+\begin{center}
+\textbf{（答案必须写在答题纸上）}
+\end{center}
+\vspace{-1.0em} % 使用负间距进一步减小与黑框的距离
+
+% 大黑框区域（包裹考试要求+评分标准）
+% 默认会首行缩进，使用\noindent可以取消首行缩进
+\begin{framed}
+
+\begin{center}
+    \bfseries \zihao{-3} 基于深度学习的多模态行人重识别综述 \\
+    洪玉杰
+\end{center}
+
+
+{\noindent \bfseries \zihao{5} 摘要：}认识海洋、经略海洋离不开水声通信及网络技术的发展。该文对水声通信技术和水声通信网络(UACN)进行综述，首先回顾了水声通信技术和水声通信网络的发展，总结了水声信道的特点。然后，对于水声通信技术中的
+非相干调制技术、相干调制技术以及以应用需求为导向的新型通信技术进行陈述。随后，对于水声通信网络中数
+据链路层媒介接入控制协议、网络层的路由协议和跨层设计进行分类探讨。最后，对目前水声通信及网络技术的
+不足进行总结，并且对未来水声通信及网络技术的发展进行
+
+
+
+
+
+
+
+
+
+
+
+\end{framed}
+
+\end{document}

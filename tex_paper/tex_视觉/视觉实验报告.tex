@@ -1,0 +1,50 @@
+\documentclass{article}
+% 核心配置（Windows兼容）
+\usepackage[fontset=windows]{ctex} % 中文字体
+\usepackage{newtxtext} % 提供Times New Roman兼容的英文文本字体
+\usepackage{geometry}
+\usepackage{ulem} % 提供更好的下划线支持
+\geometry{a4paper, top=2cm, bottom=2cm, left=2cm, right=2cm}
+\usepackage{framed} % 用于生成大黑框
+\setlength{\FrameRule}{1pt} % 大黑框边框粗细（1pt=明显黑框）
+\setlength{\FrameSep}{1em} % 框内内容与边框的间距（避免拥挤）
+
+% 正文默认五号字
+\begin{document}
+% 标题（居中加粗，匹配Word样式）
+\begin{center}
+    \bfseries \zihao{3} 基于卷积神经网络的\textbf{FashionMNIST}分类
+\end{center}
+
+% 顶部信息栏（下划线占位符，和Word一致）
+{\zihao{-4} % 设置为小四号字
+\noindent 考试科目：\uline{多媒体信息系统} \quad 课程编号：\rule{2cm}{0.15mm} \quad 考卷类型：学术论文报告 \\ 
+\noindent 姓名：\rule{2cm}{0.15mm} \quad 学号：\rule{2cm}{0.15mm} \quad 阅卷教师：\rule{2cm}{0.15mm} \quad 成绩：\rule{2cm}{0.15mm}
+}
+
+% "答案必须写在答题纸上"提示
+\vspace{1.0em} % 减小垂直间距
+\noindent\centering % 使用\centering代替center环境
+\textbf{（答案必须写在答题纸上）}
+\vspace{-1.0em} % 使用负间距进一步减小与黑框的距离
+
+% 大黑框区域（包裹考试要求+评分标准）
+% 默认会首行缩进，使用\noindent可以取消首行缩进
+\begin{framed}
+
+
+这里是要写的内容
+
+
+
+
+
+
+
+
+
+
+
+\end{framed}
+
+\end{document}
