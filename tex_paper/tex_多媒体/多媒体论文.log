@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.25)  4 JAN 2026 14:49
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.25)  4 JAN 2026 15:22
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -406,15 +406,15 @@ LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.53937> on input line 61.
+(Font)              <10.53937> on input line 62.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 61.
+(Font)              <7> on input line 62.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 61.
+(Font)              <5> on input line 62.
 File: image.png Graphic file (type bmp)
 <image.png>
 
-Underfull \hbox (badness 2150) in paragraph at lines 195--195
+Underfull \hbox (badness 2150) in paragraph at lines 218--218
 \TU/lmr/m/n/10.53937 [32] Liu C, Zhang J, Chen L. Cross-modulated Attention Transformer for RGBT Track-
  []
 
@@ -425,19 +425,15 @@ Underfull \hbox (badness 2150) in paragraph at lines 195--195
 ]
 
 [2]
-Overfull \vbox (0.6568pt too high) detected at line 221
- []
-
-
 
 [3]
 
 [4]
-Underfull \vbox (badness 2326) detected at line 221
+Underfull \vbox (badness 2096) detected at line 244
  []
 
 
-Underfull \vbox (badness 1708) detected at line 221
+Underfull \vbox (badness 1521) detected at line 244
  []
 
 
@@ -459,12 +455,12 @@ L3 programming layer <2022/07/14>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 8686 strings out of 475796
- 238281 string characters out of 5772143
- 770574 words of memory out of 5000000
- 31534 multiletter control sequences out of 15000+600000
+ 8689 strings out of 475796
+ 238476 string characters out of 5772143
+ 771574 words of memory out of 5000000
+ 31537 multiletter control sequences out of 15000+600000
  561725 words of font info for 70 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 93i,8n,111p,1675b,357s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 93i,8n,111p,1681b,357s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on 多媒体论文.pdf (10 pages).
