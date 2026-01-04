@@ -8,14 +8,7 @@
 \usepackage[hypcap=false]{caption} % 用于图片标题，禁用hypcap选项以避免警告
 \usepackage{subcaption} % 用于子图
 \usepackage{booktabs} % 用于三线表
-\usepackage{hyperref} % 用于超链接
-\hypersetup{
-    colorlinks=true,      % 使用彩色链接而不是边框
-    linkcolor=blue,       % 内部链接颜色
-    citecolor=blue,       % 引用颜色
-    urlcolor=blue,        % URL颜色
-    pdfborder=0 0 0       % 消除超链接边框
-}
+
 \geometry{a4paper, top=2cm, bottom=2.5cm, left=2cm, right=2cm}
 
 % 正文默认五号字
@@ -47,7 +40,7 @@
     \textbf{\zihao{-3} 多模态行人重识别研究综述}
 \end{center}
 
-{\noindent \bfseries \zihao{-5} 摘\quad 要：}多模态行人重识别旨在突破单模态识别的场景局限，通过融合可见光图像、红外图像、文本语义、视频序列等多源模态信息，实现复杂环境下的精准行人身份匹配，是智能安防与计算机视觉领域的核心技术。本文系统梳理多模态行人重识别的研究体系：首先界定模态、跨模态匹配、模态鸿沟等核心概念，划分涵盖可见光 - 红外、文本 - 图像、视频 - 单帧的双模态跨模态任务，以及多源融合任务核心任务，建立以 Rank-k 准确率、mAP 为核心、MMD 为辅助的评价指标体系；其次按技术路线综述五大核心方法，包括特征对齐与融合、注意力与特征增强、语义与无监督学习、视频多模态融合及模态差异消除，深入分析各类方法的技术逻辑与优势；最后总结当前面临的模态鸿沟缓解、动态融合适配、低资源场景泛化及工程化部署四大挑战，并展望多模态大模型融合、自适应差异消除、低资源学习优化及跨平台适配等未来方向。
+{\noindent \bfseries \zihao{-5} 摘\quad 要：}多模态行人重识别旨在突破单模态识别的场景局限，通过融合可见光图像、红外图像、文本语义、视频序列等多源模态信息，实现复杂环境下行人身份的精准匹配，是智能安防与计算机视觉领域的核心技术。本文系统梳理多模态行人重识别的研究体系：首先界定模态、跨模态匹配、模态鸿沟等核心概念，划分涵盖可见光 - 红外、文本 - 图像、视频 - 单帧模态（如图像）的双模态跨模态任务及多源融合任务，建立以 Rank-k 准确率、mAP 为核心，MMD 为辅助的评价指标体系；其次按技术路线综述五大核心方法，包括特征对齐与融合、注意力与特征增强、语义与无监督学习、视频跨模态融合及模态差异消除，深入分析各类方法的技术逻辑与优势；最后总结当前面临的模态鸿沟缓解、动态融合适配、低资源场景泛化及工程化部署四大挑战，并展望多模态大模型融合、自适应差异消除、低资源学习优化及跨平台适配等未来方向。
 
 {\noindent \bfseries \zihao{-5} 关键词：}多模态行人重识别；跨模态匹配；特征对齐；注意力机制；无监督学习；视频多模态融合
 
@@ -57,10 +50,10 @@
     \textbf{\zihao{-3} Review of multimodal pedestrian re-identification}
 \end{center}
 
-{\noindent \bfseries \zihao{-5} Abstract：}
+{\noindent \bfseries \zihao{-5} Abstract：}Multimodal person re-identification aims to break through the scenario limitations of single-modal recognition. By fusing multi-source modal information such as visible light images, infrared images, text semantics, and video sequences, it achieves accurate matching of pedestrian identities in complex environments, and is a core technology in the fields of intelligent security and computer vision. This paper systematically sorts out the research system of multimodal person re-identification: firstly, it defines core concepts such as modality, cross-modal matching, and modality gap, classifies bimodal cross-modal tasks covering visible light-infrared, text-image, and video-single-frame modality (e.g., images) as well as multi-source fusion tasks, and establishes an evaluation index system with Rank-k accuracy and mAP as the core and MMD as the auxiliary; secondly, it summarizes five core methods according to technical routes, including feature alignment and fusion, attention and feature enhancement, semantics and unsupervised learning, video cross-modal fusion, and modality difference elimination, and deeply analyzes the technical logic and advantages of each method; finally, it summarizes the four major challenges currently faced, namely modality gap mitigation, dynamic fusion adaptation, generalization in low-resource scenarios, and engineering deployment, and looks forward to future directions such as multimodal large model fusion, adaptive difference elimination, low-resource learning optimization, and cross-platform adaptation.
 
 
-{\noindent \bfseries \zihao{-5} Keywords：}
+{\noindent \bfseries \zihao{-5} Keywords：}multimodal person re-identification; cross-modal matching; feature alignment; attention mechanism; unsupervised learning; video multimodal fusion
 
 
 {\noindent \bfseries \zihao{-4} 1\quad 引言}\par
@@ -118,40 +111,37 @@
 \indent 为全面、准确地衡量跨模态行人重识别方法的性能，利用了核心排序匹配指标加辅助模态差异指标的完整评价体系，核心排序匹配指标是方法性能对比的核心标准，直接反映模型的检索与匹配能力，主要包括Rank-k准确率与平均精度均值（mAP）$^{[20]}$。其中，Rank-k准确率衡量在检索结果的前k个候选样本中包含目标行人的比例，常用k值为1、5、10，Rank-1准确率直观反映模型的最优匹配能力，Rank-5与Rank-10准确率则体现模型的排序稳定性；平均精度均值（mAP）则综合考虑所有查询样本的平均精度，既关注正确匹配样本的比例，也重视排序的合理性，能更全面地评估模型的整体性能。辅助模态差异指标用于补充验证模型对模态鸿沟的缓解效果，以最大均值差异（MMD）为典型代表，通过衡量不同模态特征分布的差异程度，判断模型的模态对齐效果即MMD值越小，说明两种模态的特征分布越接近，模态鸿沟缓解效果越好。两类指标协同作用，既能直观判断模型的实际应用性能，也能深入分析技术方法的核心优势与不足$^{[21]}$。
 
 {\noindent \bfseries \zihao{-4} 3\quad 多模态行人重识别核心技术方法}\par
-{\noindent \bfseries \zihao{5} 3.1\quad 特征对齐与多维度跨模态融合}\par
+{\noindent \zihao{5} 3.1\quad 特征对齐与多维度跨模态融合}\par
 \indent 特征对齐与融合是缓解多模态行人重识别中模态鸿沟的核心技术路径，相关代表性研究各有侧重：Li 等$^{[22]}$提出双注意力引导融合的跨模态特征对齐方法，通过模态内注意力细化单模态局部特征、模态间注意力对齐跨模态语义特征，以双注意力协同强化模态不变表示；程德强等$^{[23]}$设计共享 - 解离模块分离模态共享与特异性特征，借助多粒度相关特征学习模块挖掘行人身体区域的跨模态关联信息，搭配跨尺度感知机制融合不同分辨率特征，有效缓解姿态变化与局部遮挡带来的负面影响； Zhang 等$^{[24]}$构建局部 - 全局分层特征融合框架，引入模态一致性损失约束跨模态特征分布，通过分层聚合与分布约束协同提升匹配精度；金静等$^{[25]}$提出基于频域空间信息的特征聚合策略，构建四流特征提取网络分别获取可见光与红外模态的深度语义及浅层细节特征，经时空频融合模块实现域间信息转换与融合，再通过哈达玛积结合注意力加权完成特征聚合，强化模态间特征一致性； Wang 等$^{[26]}$设计自适应特征对齐与渐进式融合网络，通过自适应对齐模块动态适配模态差异，以渐进式策略逐步聚合多尺度特征，显著增强特征判别性；刘锁兰等$^{[27]}$提出三重嵌入扩展与分层特征聚合方法，从模态内、模态间、跨域三个维度优化特征映射，通过早期融基础、中期筛关键、晚期聚语义的分层架构，提升跨模态特征空间的判别能力； Chen 等$^{[28]}$提出频域 - 空域协同对齐与融合方法，实现双域特征的协同对齐与互补融合，弥补单一域特征的信息缺陷，进一步缓解模态鸿沟；朱沛伍等$^{[29]}$提出多频多尺度嵌入（MFME）模型，通过多尺度信息融合模块提取行人全局结构与局部细节特征，结合低高频特征聚合模块分解并聚合不同模态的频域信息，强化模态不变特征以提升复杂环境下的匹配鲁棒性。
 
-{\noindent \bfseries \zihao{5} 3.2\quad 多样化注意力机制与特征增强}\par
+{\noindent \zihao{5} 3.2\quad 多样化注意力机制与特征增强}\par
 \indent 注意力机制与特征增强是提升跨模态行人重识别性能的关键技术方向，相关研究通过多维度优化模态间特征交互与表达能力，有效缓解模态鸿沟：Yang 等$^{[30]}$提出区域增强与跨模态注意力（RACA）模型，通过 PedMix 区域数据增强模块提升行人区域连贯性，搭配轻量化模态特征转移模块融合跨注意力与卷积网络，在减少干扰信息的同时控制计算开销，于主流数据集上验证了有效性；郭思琦等$^{[31]}$引入辅助模态与注意力机制相结合的方法，通过强化主模态与辅助模态的关联学习，挖掘模态不变特征，显著提升复杂场景下跨模态匹配的鲁棒性；Chen 等$^{[32]}$提出跨调制注意力，设计关联调制增强模块通过模态间共识修正注意力权重，统一自注意力与跨注意力机制，既缓解了单模态特征表示局限，又提升了多模态特征交互的鲁棒性；杨真真等$^{[33]}$提出混合卷积增强与内容感知注意力融合方法，利用混合卷积强化特征提取能力，通过内容感知注意力精准聚焦行人关键区域，双重优化减少背景干扰，提升跨模态特征一致性；Huang 等$^{[34]}$提出注意力增强多模态特征融合网络（AE-Net），整合 RGB 全局特征、灰度图像特征与语义分割无关服装特征，结合多尺度融合注意力机制，有效降低服装变化对识别精度的影响；黄驰涵等$^{[35]}$设计融合注意力与特征增强一体化框架，通过融合注意力模块实现跨模态语义精准对齐，搭配特征增强策略强化细粒度细节信息，显著提升特征判别性与匹配精度；何磊等$^{[36]}$提出跨通道交互注意力驱动的双流网络，以双流结构分别提取双模态特征，通过跨通道交互注意力促进模态间通道信息深度交互，强化特征关联性与一致性；陈梦蝶等$^{[37]}$构建双重增强网络，从特征表达优化与模态对齐校准两个维度展开设计，结合注意力机制筛选有效特征信息，进一步提升跨模态特征质量与匹配稳定性。
 
-{\noindent \bfseries \zihao{5} 3.3\quad 语义增强与无监督 / 半监督学习}\par
+{\noindent \zihao{5} 3.3\quad 语义增强与无监督 / 半监督学习}\par
 \indent 语义挖掘与无监督 / 半监督学习为跨模态行人重识别提供了低数据依赖的有效解决方案，通过强化模态间语义一致性与优化无监督特征学习，显著缓解模态鸿沟与标注数据匮乏问题，相关代表性研究各有侧重：Liu 等$^{[38]}$2025 年提出语义对齐协同优化的无监督跨模态重识别方法（SALCR），采用双流网络与 ResNet50 主干网络，通过语义对齐学习与协同细化机制，在 RegDB 和 SYSU-MM01 数据集上优化模态不变特征提取，无需人工标注即可实现高效跨模态匹配；董令赟等$^{[39]}$提出跨模态语义一致性与半监督结合的算法，通过语义编码模块映射特征至统一语义空间，利用伪标签生成扩展标注数据，设计语义一致性损失约束特征分布，减少标注依赖的同时提升匹配判别性；Pang 等$^{[40]}$2025 年提出增强型软化匹配的无监督方法（ASM），通过跨模态增强匹配模块提升伪标签对颜色变化的鲁棒性，搭配软标签动量更新策略优化训练稳定性，经模态内与跨模态学习迭代优化特征对齐效果；宋存利等$^{[41]}$设计语义增强网络，引入行人属性语义信息辅助视觉特征学习，通过属性 - 特征交互模块强化语义关联，采用无监督对比学习优化特征分布，降低环境干扰与模态差异影响；Qin 等$^{[42]}$2025 年提出基于 MLLMs 的人机交互框架（ICL），通过测试时人机交互细化文本查询语义，结合重组数据增强丰富文本描述多样性，强化文本 - 图像细粒度语义对齐；贾军营等$^{[43]}$改进 CLIP-ReID 框架，优化跨模态语义映射，引入无监督对比损失与语义一致性约束，简化模型结构的同时增强特征兼容性，提升语义驱动的无监督匹配性能；Wang 等$^{[44]}$2024 年提出多记忆匹配框架（MMM），通过跨模态聚类生成伪标签，设计多记忆学习匹配模块挖掘个体视角细微特征，搭配软聚类对齐损失缩小模态鸿沟并抑制噪声伪标签；Zhang 等$^{[45]}$2025 年提出同质 - 异质一致性标签关联方法，设计模态统一标签转移模块建模实例级亲和性，通过在线跨记忆标签细化优化伪标签质量，结合模态不变表示学习提升标签关联精细度。
 
-{\noindent \bfseries \zihao{5} 3.4\quad 视频跨模态融合与时空信息协同}\par
+{\noindent \zihao{5} 3.4\quad 视频跨模态融合与时空信息协同}\par
 \indent 视频多模态融合类方法通过充分挖掘视频序列中的时空信息与多模态互补价值，显著提升跨模态行人重识别的鲁棒性与实用性，相关代表性研究各具特色：Yao 等$^{[46]}$2025 年提出映射与协同学习（MCL）框架，设计跨模态特征映射模块生成伪正样本对，构建伪身份空间，结合静态 - 动态协同学习策略对齐簇级与实例级模态差异，在无配对无标注场景下实现高效跨模态匹配；Asurada 等$^{[47]}$2025 年提出 X-ReID 框架，通过跨模态原型协作模块对齐整合不同模态特征，搭配多粒度信息交互模块融合短时长时跨帧信息与跨模态对齐特征，生成鲁棒的序列级表示，在 HITSZ-VCM 等基准数据集上表现优异；Visuang 等$^{[48]}$2025 年提出视频级语言驱动（VLD）框架，通过模态不变语言提示模块生成共享文本提示并对齐视觉特征，结合时空提示模块聚合身份相关时空信息，以轻量化设计实现性能突破；Zhang 等$^{[49]}$2025 年提出跨模态与时序协作（CMTC）网络，设计事件转换网络提取辅助信息，通过差异模态协作模块平衡事件与辅助信息的互补作用，搭配时序协作模块挖掘运动与外观线索，优化事件基视频重识别性能；VCM Project 团队$^{[50]}$2025 年构建大规模 RGB-IR 视频数据集，提出模态不变子空间投影与运动不变时间记忆提取相结合的方法，充分利用视频帧间冗余信息，验证了视频 - 视频匹配在跨模态场景中的优势。
 
-{\noindent \bfseries \zihao{5} 3.5\quad 模态差异消除与特征分布对齐}\par
+{\noindent \zihao{5} 3.5\quad 模态差异消除与特征分布对齐}\par
 \indent 模态差异消除是跨模态行人（车辆）重识别的核心挑战，2024-2025 年相关英文研究通过创新特征分离、局部对齐等策略高效缩小模态鸿沟：Seo 等$^{[51]}$2024 年提出基于关键点掩码与擦除的特征表示方法，通过关键点掩码归一化局部特征表示以减少特征级模态差异，搭配关键点擦除提升全局特征多样性与有效性，在 SYSU-MM01 数据集上验证了对相似外观行人匹配的优化效果；Shi 等$^{[52]}$2024 年提出跨模态信息瓶颈表示学习网络（CM InfoNet），通过互信息瓶颈权衡筛选身份相关信息、压缩冗余内容，设计模态共识模块对齐可见光与红外特征，同时获取全局 - 局部特征以强化关键部位判别，有效消除跨模态与模态内变异；MCGS-ReID 团队$^{[53]}$2024 年提出模态交叉图采样（MCGS）方法，助力网络挖掘更多跨模态信息，搭配多模态共享特征对齐网络强化跨模态共享特征表示，实现不同模态特征精准对齐，在 VT-Vehicle 等数据集上显著缓解成像原理与光谱差异导致的模态鸿沟；
 
 % 插入技术对比表格
 \begin{center}
     \captionof{table}{跨模态行人重识别技术路线对比}
-    
-    \resizebox{\linewidth}{!}{% 调整表格大小
-    \begin{tabular}{ccccc}
+    \resizebox{0.9\linewidth}{!}{% 调整表格大小
+    \begin{tabular}{ccc}
     \toprule
-    \textbf{技术类别} & \textbf{核心思路} & \textbf{关键创新点} & \textbf{优势} & \textbf{局限性} \\
+    \textbf{技术类别} & \textbf{核心思路} & \textbf{关键创新点} \\
     \midrule
-    特征对齐与融合 & 分离共享/特异性特征，通过多粒度/频域融合强化一致性 & 频域-空域协同、分层聚合 & 缓解姿态/遮挡干扰 & 计算开销较大 \\
-    注意力与特征增强 & 聚焦关键区域，抑制冗余，强化模态间通道交互 & 跨通道注意力、内容感知机制 & 提升特征判别性，轻量化设计可落地 & 对极端遮挡鲁棒性不足 \\
-    语义与无监督学习 & 语义对齐+伪标签生成，降低标注依赖 & CLIP改进、MLLMs语义细化 & 适配低资源场景 & 伪标签噪声影响性能 \\
-    视频跨模态融合 & 挖掘时空信息，协同静态外观与动态运动线索 & 多粒度时空交互、运动不变记忆 & 动态场景鲁棒性强 & 需视频序列数据，采集成本高 \\
-    模态差异消除 & 特征解纠缠/局部对齐，缩小模态分布偏移 & 关键点掩码、信息瓶颈筛选 & 直接缓解模态鸿沟 & 对动态分布适配不足 \\
+    特征对齐与融合 & 分离共享/特异性特征，通过多粒度/频域融合强化一致性 & 频域-空域协同、分层聚合 \\
+    注意力与特征增强 & 聚焦关键区域，抑制冗余，强化模态间通道交互 & 跨通道注意力、内容感知机制 \\
+    语义与无监督学习 & 语义对齐+伪标签生成，降低标注依赖 & CLIP改进、MLLMs语义细化 \\
+    视频跨模态融合 & 挖掘时空信息，协同静态外观与动态运动线索 & 多粒度时空交互、运动不变记忆 \\
+    模态差异消除 & 特征解纠缠/局部对齐，缩小模态分布偏移 & 关键点掩码、信息瓶颈筛选 \\
     \bottomrule
     \end{tabular}}
 \end{center}
-
-
 
 {\noindent \bfseries \zihao{-4} 4\quad 挑战与未来展望}\par
 {\noindent \bfseries \zihao{5} 4.1\quad 核心挑战}\par
@@ -161,17 +151,9 @@
 \indent 针对上述挑战，结合 2024-2025 年技术发展趋势，跨模态行人重识别的未来研究可聚焦四大方向。一是多模态大模型的深度融合，将 CLIP 等视觉 - 语言预训练模型与跨模态 ReID 任务深度适配，通过 Prompt Tuning 等技术强化模态间语义对齐，挖掘文本 - 视觉、红外 - 可见光的细粒度关联，同时借助 MLLMs 提升人机交互下的语义细化能力。二是自适应融合与动态差异消除机制，设计基于环境感知的模态权重分配网络，结合频域 - 空域协同对齐策略，实现对动态场景下模态差异的实时适配；探索生成式 AI 与特征解纠缠的结合，通过生成高质量跨模态样本缩小分布鸿沟。三是低资源学习的技术突破，优化无监督聚类与伪标签生成策略，引入对比学习与自监督预训练的协同机制，提升模型在少样本、跨数据集场景下的泛化能力；发展半监督与弱监督学习范式，降低对大规模标注数据的依赖。四是跨平台适配与工程化优化，针对多摄像头、多平台场景设计轻量化网络架构，通过模型压缩与量化技术提升实时性；构建更贴近实战的多模态数据集，涵盖复杂光照、多视角、低分辨率等场景，推动技术从实验室走向实际应用。
 
 {\noindent \bfseries \zihao{-4} 5\quad 结论}\par
-\indent 多模态行人重识别作为智能安防与计算机视觉领域的核心技术，旨在突破单模态识别的场景局限，通过融合可见光、红外、文本、视频等多源信息，实现复杂环境下的精准行人身份匹配，为全天候智能监控、无图寻人、动态追踪等任务提供核心支撑。本文系统梳理了该领域的发展历程、基础框架与核心技术，形成了全面的综述体系。
-在基础框架层面，本文明确了多模态 ReID 的核心概念与模态特性，将核心任务划分为可见光 - 红外、文本 - 图像、视频跨模态、多源融合四类，建立了以 Rank-k 准确率、mAP 为核心，MMD 为辅助的评价指标体系，为技术对比与性能衡量提供标准。在核心技术层面，本文按技术路线将现有方法划分为五大类：特征对齐与融合类通过多尺度、频域聚合等策略强化特征一致性；注意力与特征增强类借助多样化注意力机制聚焦关键信息；语义与无监督类通过语义挖掘与低监督学习降低标注依赖；视频多模态融合类利用时空信息提升动态场景鲁棒性；模态差异消除类通过特征分离、局部对齐等策略缩小模态鸿沟。各类方法从不同维度缓解了模态异质性带来的挑战，在 SYSU-MM01、RegDB、CUHK-PEDES 等主流数据集上验证了有效性。
+\indent 多模态行人重识别作为智能安防与计算机视觉领域的核心技术，旨在突破单模态识别的场景局限，通过融合可见光图像、红外图像、文本语义、视频序列等多源模态信息，实现复杂环境下的精准行人身份匹配，为全天候智能监控、无图寻人、动态追踪等任务提供核心支撑。本文系统梳理了该领域的发展历程、基础框架与核心技术，形成了全面的综述体系。
+在基础框架层面，本文明确了多模态 ReID 的核心概念与模态特性，划分涵盖可见光 - 红外、文本 - 图像、视频 - 单帧的单模态跨模态任务，以及多源融合任务。建立了以 Rank-k 准确率、mAP 为核心，MMD 为辅助的评价指标体系，为技术对比与性能衡量提供标准。在核心技术层面，本文按技术路线将现有方法划分为五大类：特征对齐与多维度跨模态融合通过多尺度、频域聚合等策略强化特征一致性；多样化注意力机制与特征增强借助多样化注意力机制聚焦关键信息；语义增强与无监督半监督学习通过语义挖掘与低监督学习降低标注依赖；视频跨模态融合与时空信息协同利用时空信息提升动态场景鲁棒性；模态差异消除与特征分布对齐通过特征分离、局部对齐等策略缩小模态鸿沟。各类方法从不同维度缓解了模态异质性带来的挑战，在 SYSU-MM01、RegDB、CUHK-PEDES 等主流数据集上验证了有效性。
 尽管技术取得显著进展，但模态鸿沟的根本性缓解、融合策略的动态适配、低资源场景的泛化能力、工程化部署的实时性等挑战仍未完全解决。未来，通过多模态大模型融合、自适应融合机制、低资源学习优化与跨平台适配等方向的深入研究，跨模态行人重识别技术将进一步提升实用价值，为智能安防体系的完善、公共安全保障能力的提升提供更坚实的技术支撑，推动该领域从实验室研究走向规模化实战应用。
-
-% % 插入单张照片示例 - 调整为较小尺寸并使用[h]选项尝试放在当前位置
-% \begin{center}
-%   \includegraphics[width=0.6\linewidth]{h_CNN.png}% 减小图片宽度
-%   \captionof{figure}{这是一个照片示例}
-%   \label{fig:photo999}
-% \end{center}
-
 
 
 \begin{center}
@@ -179,83 +161,61 @@
 \end{center}
 
 
-\noindent[1] 王素玉，肖塞。行人重识别研究综述 [J]. 北京工业大学学报,2022, 48 (10): 1100-1112.\par
-\noindent[2] Zheng L, Yang Y, Hauptmann A G. Person re-identification: past,present and future[EB/OL].[2020-09-07].\par
-\noindent[3] 李擎，胡伟阳，李江昀，等。基于深度学习的行人重识别方法综述 [J]. 工程科学学报,2022, 44 (5):920-932.\par
-\noindent[4] Ahmed E, Jones M, Marks T K. An improved deep learning architecture for person reidentification[C]//2015 IEEE Conference on Computer Vision and Pattern Recognition. Piscataway:IEEE, 2015: 3908-3916.\par
-\noindent[5] 叶钰，王正，梁超，等。多源数据行人重识别研究综述 [J]. 自动化学报,2024, 46 (9): 1869-1884.\par
+\noindent[1] 王素玉，肖塞。行人重识别研究综述 [J]. 北京工业大学学报，2022, 48 (10): 1100-1112.\par
+\noindent[2] Zheng L, Yang Y, Hauptmann A G. Person re-identification: past, present and future[EB/OL]. [2020-09-07].\par
+\noindent[3] 李擎，胡伟阳，李江昀，等。基于深度学习的行人重识别方法综述 [J]. 工程科学学报，2022, 44 (5): 920-932.\par
+\noindent[4] Ahmed E, Jones M, Marks T K. An improved deep learning architecture for person reidentification[C]//2015 IEEE Conference on Computer Vision and Pattern Recognition. Piscataway: IEEE, 2015: 3908-3916.\par
+\noindent[5] 叶钰，王正，梁超，等。多源数据行人重识别研究综述 [J]. 自动化学报，2024, 46 (9): 1869-1884.\par
 \noindent[6] Zajdel R, Komorowski J, Napieralski A. Person re-identification using stereo vision[C]//2005 IEEE International Conference on Robotics and Automation. Piscataway: IEEE, 2005: 3026-3031.\par
 \noindent[7] Yi D, Lei Z, Liao S, et al. Deep metric learning for person re-identification[C]//2014 IEEE International Joint Conference on Biometrics. Piscataway: IEEE, 2014: 1-8.\par
 \noindent[8] Wu A C, Zheng W S, Yu H X, et al. RGB-infrared cross-modality person re-identification[C]//2017 IEEE International Conference on Computer Vision. Piscataway: IEEE, 2017: 5390-5399.\par
-\noindent[9] He L, Zheng Z, Zhang S, et al. Harmonious attention network for person re-identification[C]//2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition. Piscataway: IEEE, 2018:2285-2294.\par
-\noindent[10] Yu H X, Zheng W S, Wu A, et al. Unsupervised person re-identification by soft multilabel
-learning[C]//2019 IEEE/CVF Conference on Computer Vision and Pattern Recognition. Piscataway:IEEE, 2019: 2143-2152.\par
-\noindent[11] 张明，李静。多模态行人重识别研究综述 [J]. 计算机应用研究,2025, 42 (8): 2321-2328.\par
-\noindent[12] 王磊，赵阳。多模态融合行人重识别技术研究进展 [J]. 模式识别与人工智能,2024, 37 (9): 812-821.\par
-\noindent[13] Li W, Zhang Y, Wang C. Dual-path convolutional image-text embeddings with instance loss for
-text-based person retrieval[C]//2017 ACM Multimedia Conference. New York: ACM, 2017: 1544-1551.\par
-\noindent[14] 周勇，王瀚正，赵佳琦，等．基于可解释注意力部件模型的行人重识别方法 [J]. 自动化学
-报,2023,49(10): 2159-2171.\par
-\noindent[15] Ye M, Shen J, Lin G, et al. Deep learning for person re-identification: a survey and outlook[J].
-IEEE Transactions on Pattern Analysis and Machine Intelligence, 2022, 44(6): 2872-2893.\par
-\noindent[16] Nguyen D T, Hong H G, Kim K W, et al. Person recognition system based on a combination of
-body images from visible light and thermal cameras[J]. Sensors, 2017, 17(3): 605.\par
-\noindent[17] Li X, Li W, Chen D, et al. CUHK-PEDES: A large-scale dataset for pedestrian text retrieval[C]//2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition. Piscataway:IEEE, 2018: 6097-6106.\par
-\noindent[18] Lin Y, Zheng L, Zheng Z, et al. VideoReID-MM: A large-scale benchmark for video-based crossmodal person re-identification[J]. IEEE Transactions on Circuits and Systems for Video Technology,2023, 33(4): 1689-1703.\par
-\noindent[19] Chen S, Liu J, Zhang H, et al. CASIA Gait Dataset B: A multi-modal gait database for person
-re-identification[J]. Pattern Recognition, 2019, 90: 187-198.\par
-\noindent[20] Lin Y, Zheng L, Zheng Z, et al. A comprehensive evaluation of person re-identification metrics[J].
-Pattern Recognition, 2023, 139: 109452.\par
-\noindent[21] Liu J, Sun Y, Zhu F, et al. Learning memory-augmented unidirectional metrics for cross-modality
-person re-identification[C]//2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition. Piscataway: IEEE, 2022: 19366-19375.\par
-\noindent[22] Li X, Wang Y, Zhang Z. Cross-Modal Feature Alignment via Dual Attention Guided Fusion for
-Person Re-identification [C]//Proceedings of the IEEE/CVF Conference on Computer Vision and
-Pattern Recognition. 2024: 12456-12465.\par
-\noindent[23] 程德强，钱建生，郭星歌，等。基于多粒度融合和跨尺度感知的跨模态行人重识别 [J]. 通信学报,2025, 46 (1): 110-123.\par
-\noindent[24] Zhang H, Li J, Chen W. Hierarchical Feature Fusion with Modal Consistency Constraints for
-Cross-Modal Person ReID [C]//Proceedings of the European Conference on Computer Vision. 2024:8912-8921.\par
-\noindent[25] 金静。基于频域空间信息的特征聚合跨模态行人重识别方法 [J]. 自动化学报,2024, 50 (9): 1987-1996.\par
-\noindent[26] Wang S, Liu Q, Zhao L. Adaptive Feature Alignment and Progressive Fusion Network for Multimodal Person Re-identification [J]. IEEE Transactions on Image Processing, 2025, 34 (2): 789-801.\par
-\noindent[27] 刘锁兰，孔立智，王洪元。基于三重嵌入扩展和特征聚合的跨模态行人重识别 [J]. 模式识别与人工智能,2024, 37 (7): 621-630.\par
+\noindent[9] He L, Zheng Z, Zhang S, et al. Harmonious attention network for person re-identification[C]//2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition. Piscataway: IEEE, 2018: 2285-2294.\par
+\noindent[10] Yu H X, Zheng W S, Wu A, et al. Unsupervised person re-identification by soft multilabel learning[C]//2019 IEEE/CVF Conference on Computer Vision and Pattern Recognition. Piscataway: IEEE, 2019: 2143-2152.\par
+\noindent[11] 张明，李静。多模态行人重识别研究综述 [J]. 计算机应用研究，2025, 42 (8): 2321-2328.\par
+\noindent[12] 王磊，赵阳。多模态融合行人重识别技术研究进展 [J]. 模式识别与人工智能，2024, 37 (9): 812-821.\par
+\noindent[13] Li W, Zhang Y, Wang C. Dual-path convolutional image-text embeddings with instance loss for text-based person retrieval[C]//2017 ACM Multimedia Conference. New York: ACM, 2017: 1544-1551.\par
+\noindent[14] 周勇，王瀚正，赵佳琦，等。基于可解释注意力部件模型的行人重识别方法 [J]. 自动化学报，2023, 49 (10): 2159-2171.\par
+\noindent[15] Ye M, Shen J, Lin G, et al. Deep learning for person re-identification: a survey and outlook[J]. IEEE Transactions on Pattern Analysis and Machine Intelligence, 2022, 44(6): 2872-2893.\par
+\noindent[16] Nguyen D T, Hong H G, Kim K W, et al. Person recognition system based on a combination of body images from visible light and thermal cameras[J]. Sensors, 2017, 17(3): 605.\par
+\noindent[17] Li X, Li W, Chen D, et al. CUHK-PEDES: A large-scale dataset for pedestrian text retrieval[C]//2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition. Piscataway: IEEE, 2018: 6097-6106.\par
+\noindent[18] Lin Y, Zheng L, Zheng Z, et al. VideoReID-MM: A large-scale benchmark for video-based crossmodal person re-identification[J]. IEEE Transactions on Circuits and Systems for Video Technology, 2023, 33(4): 1689-1703.\par
+\noindent[19] Chen S, Liu J, Zhang H, et al. CASIA Gait Dataset B: A multi-modal gait database for person re-identification[J]. Pattern Recognition, 2019, 90: 187-198.\par
+\noindent[20] Lin Y, Zheng L, Zheng Z, et al. A comprehensive evaluation of person re-identification metrics[J]. Pattern Recognition, 2023, 139: 109452.\par
+\noindent[21] Liu J, Sun Y, Zhu F, et al. Learning memory-augmented unidirectional metrics for cross-modality person re-identification[C]//2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition. Piscataway: IEEE, 2022: 19366-19375.\par
+\noindent[22] Li X, Wang Y, Zhang Z. Cross-Modal Feature Alignment via Dual Attention Guided Fusion for Person Re-identification[C]//Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2024: 12456-12465.\par
+\noindent[23] 程德强，钱建生，郭星歌，等。基于多粒度融合和跨尺度感知的跨模态行人重识别 [J]. 通信学报，2025, 46 (1): 110-123.\par
+\noindent[24] Zhang H, Li J, Chen W. Hierarchical Feature Fusion with Modal Consistency Constraints for Cross-Modal Person ReID[C]//Proceedings of the European Conference on Computer Vision. 2024: 8912-8921.\par
+\noindent[25] 金静。基于频域空间信息的特征聚合跨模态行人重识别方法 [J]. 自动化学报，2024, 50 (9): 1987-1996.\par
+\noindent[26] Wang S, Liu Q, Zhao L. Adaptive Feature Alignment and Progressive Fusion Network for Multimodal Person Re-identification[J]. IEEE Transactions on Image Processing, 2025, 34(2): 789-801.\par
+\noindent[27] 刘锁兰，孔立智，王洪元。基于三重嵌入扩展和特征聚合的跨模态行人重识别 [J]. 模式识别与人工智能，2024, 37 (7): 621-630.\par
 \noindent[28] Chen M, Sun K, Hu F. Frequency-Spatial Co-Alignment and Fusion for Cross-Modal Person ReID[C]//Proceedings of the AAAI Conference on Artificial Intelligence. 2025: 6789-6796.\par
-\noindent[29] 朱沛伍，高树辉。低高频多尺度融合的跨模态行人重识别研究 [J]. 重庆邮电大学学报 (自然科学
-版), 2024, 36 (6): 1183-1192.\par
-\noindent[30] Zhang Y, Li M, Wang H. Visible-infrared person re-identification with region-based augmentation and cross modality attention [J]. Journal of Biomedical Informatics, 2025, 142: 104987.\par
-\noindent[31] 郭思琦，李明杰，张宇。基于辅助模态和注意力机制的跨模态行人重识别 [J]. 计算机应用研究,2024,41 (8): 2415-2420.\par
-\noindent[32] Liu C, Zhang J, Chen L. Cross-modulated Attention Transformer for RGBT Tracking [C]//Proceedings of the AAAI Conference on Artificial Intelligence. 2025, 39(7): 6890-6898.\par
-\noindent[33] 杨真真，王浩，赵阳。基于混合卷积增强和内容感知注意力的跨模态行人重识别 [J]. 模式识别与人工智能， 2024, 37 (10): 921-929.\par
-\noindent[34] Kim S, Park J, Lee D. Attention-enhanced multimodal feature fusion network for clothes-changing
-person re-identification [J]. Complex \& Intelligent Systems, 2024, 10 (5): 4871-4885.\par
-\noindent[35] 黄驰涵，陈雨，吴敏。基于融合注意力和特征增强的跨模态行人重识别 [J]. 电子与信息学报,2025,47 (2): 589-597.\par
-\noindent[36] 何磊，张伟，刘静。跨通道交互注意力机制驱动的双流网络跨模态行人重识别 [J]. 自动化学报,2024,50 (11): 2432-2441.\par
-\noindent[37] 陈梦蝶，李然，王强。基于双重增强网络的跨模态行人重识别 [J]. 计算机工程与应用,2025, 61 (3):128-135.\par
-\noindent[38] Liu H, He L, Zhang Y. Semantic-Aligned Learning with Collaborative Refinement for Unsupervised
-VI-ReID [J]. International Journal of Computer Vision (IJCV), 2025, 133 (4): 987-1005.\par
-\noindent[39] 董令赟。基于跨模态语义一致性和半监督的跨模态行人重识别算法研究 [J]. 计算机工程与应用,2024, 60 (18): 145-153.\par
-\noindent[40] Pang Y, Chen J, Li M. Augmented and Softened Matching for Unsupervised Visible-Infrared
-Person Re-Identification [C]//Proceedings of the IEEE International Conference on Computer Vision(ICCV). 2025: 7632-7641.\par
-\noindent[41] 宋存利。基于语义增强网络的跨模态行人重识别 [J]. 模式识别与人工智能,2025, 38 (2): 156-164.\par
-\noindent[42] Qin Y, Yang S, Wang Z. Human-centered Interactive Learning via MLLMs for Text-to-Image
-Person Re-identification [J]. arXiv preprint arXiv:2506.11036, 2025.\par
-\noindent[43] 贾军营。改进 CLIP-ReID 的跨模态行人重识别 [J]. 计算机应用研究,2024, 41 (10): 3078-3083.\par
-\noindent[44] Wang C, Zhang L, Liu J. Multi-Memory Matching for Unsupervised Visible-Infrared Person ReIdentification [J]. arXiv preprint arXiv:2401.06825, 2024.\par
-\noindent[45] Zhang S, Li K, Zhao H. Exploring Homogeneous and Heterogeneous Consistent Label Associations
-for Unsupervised Visible-Infrared Person ReID [J]. arXiv preprint arXiv:2402.00672, 2025.\par
-\noindent[46] Yao Y, Li J, Wang Z. Unsupervised Visible-Infrared Person Re-identification under Unpaired
-Settings[C]//Proceedings of the IEEE International Conference on Computer Vision (ICCV). 2025:
-4567-4576.\par
-\noindent[47] Asurada Y, Chen S, Liu M. X-ReID: Multi-granularity Information Interaction for Video-Based
-Visible-Infrared Person Re-identification[J]. arXiv preprint arXiv:2511.17964, 2025.\par
-\noindent[48] Visuang T, Zhang L, Chen Y. Video-Level Language-Driven Video-Based Visible-Infrared Person
-Re-identification[J]. arXiv preprint arXiv:2506.02439, 2025.\par
-\noindent[49] Zhang H, Liu Q, Li D. Event-based Video Person Re-identification via Cross-Modality and Temporal Collaboration[J]. arXiv preprint arXiv:2501.07296, 2025.\par
-\noindent[50] VCM Project Team. Learning Modal-Invariant and Temporal-Memory for Video-based VisibleInfrared Person Re-Identification[J]. arXiv preprint arXiv:2208.02450, 2025.\par
-\noindent[51] Seo J, Kim D, Lee S. Keypoint Mask-based Local Feature Matching and Keypoint Erasingbased Global Feature Representations for Visible-Infrared Person Re-Identification[C]//Proceedings
-of Machine Learning Research. 2024, 263: 3546-3561.\par
-\noindent[52] Shi H, Luo M, Zhang X Y, et al. Learning Cross-modality Information Bottleneck Representation
-for Heterogeneous Person Re-Identification[J]. arXiv preprint arXiv:2308.15063, 2024.\par
-\noindent[53] Zhang Y, Li W, Wang C. MCGS-ReID: A Visible-Infrared Vehicle Reidentification Method Using
-Modal-Cross Graph Sampler[J]. IEEE Access, 2024, 12: 10801215.\par
+\noindent[29] 朱沛伍，高树辉。低高频多尺度融合的跨模态行人重识别研究 [J]. 重庆邮电大学学报 (自然科学版), 2024, 36 (6): 1183-1192.\par
+\noindent[30] Zhang Y, Li M, Wang H. Visible-infrared person re-identification with region-based augmentation and cross modality attention[J]. Journal of Biomedical Informatics, 2025, 142: 104987.\par
+\noindent[31] 郭思琦，李明杰，张宇。基于辅助模态和注意力机制的跨模态行人重识别 [J]. 计算机应用研究，2024, 41 (8): 2415-2420.\par
+\noindent[32] Liu C, Zhang J, Chen L. Cross-modulated Attention Transformer for RGBT Tracking[C]//Proceedings of the AAAI Conference on Artificial Intelligence. 2025, 39(7): 6890-6898.\par
+\noindent[33] 杨真真，王浩，赵阳。基于混合卷积增强和内容感知注意力的跨模态行人重识别 [J]. 模式识别与人工智能，2024, 37 (10): 921-929.\par
+\noindent[34] Kim S, Park J, Lee D. Attention-enhanced multimodal feature fusion network for clothes-changing person re-identification[J]. Complex \& Intelligent Systems, 2024, 10(5): 4871-4885.\par
+\noindent[35] 黄驰涵，陈雨，吴敏。基于融合注意力和特征增强的跨模态行人重识别 [J]. 电子与信息学报，2025, 47 (2): 589-597.\par
+\noindent[36] 何磊，张伟，刘静。跨通道交互注意力机制驱动的双流网络跨模态行人重识别 [J]. 自动化学报，2024, 50 (11): 2432-2441.\par
+\noindent[37] 陈梦蝶，李然，王强。基于双重增强网络的跨模态行人重识别 [J]. 计算机工程与应用，2025, 61 (3): 128-135.\par
+\noindent[38] Liu H, He L, Zhang Y. Semantic-Aligned Learning with Collaborative Refinement for Unsupervised VI-ReID[J]. International Journal of Computer Vision (IJCV), 2025, 133(4): 987-1005.\par
+\noindent[39] 董令赟。基于跨模态语义一致性和半监督的跨模态行人重识别算法研究 [J]. 计算机工程与应用，2024, 60 (18): 145-153.\par
+\noindent[40] Pang Y, Chen J, Li M. Augmented and Softened Matching for Unsupervised Visible-Infrared Person Re-Identification[C]//Proceedings of the IEEE International Conference on Computer Vision (ICCV). 2025: 7632-7641.\par
+\noindent[41] 宋存利。基于语义增强网络的跨模态行人重识别 [J]. 模式识别与人工智能，2025, 38 (2): 156-164.\par
+\noindent[42] Qin Y, Yang S, Wang Z. Human-centered Interactive Learning via MLLMs for Text-to-Image Person Re-identification[EB/OL]. [2025-06-11]. arXiv preprint arXiv:2506.11036.\par
+\noindent[43] 贾军营。改进 CLIP-ReID 的跨模态行人重识别 [J]. 计算机应用研究，2024, 41 (10): 3078-3083.\par
+\noindent[44] Wang C, Zhang L, Liu J. Multi-Memory Matching for Unsupervised Visible-Infrared Person ReIdentification[EB/OL].[2024-01-06]. arXiv preprint arXiv:2401.06825.\par
+\noindent[45] Zhang S, Li K, Zhao H. Exploring Homogeneous and Heterogeneous Consistent Label Associations for Unsupervised Visible-Infrared Person ReID[EB/OL]. [2025-02-02]. arXiv preprint arXiv:2402.00672.\par
+\noindent[46] Yao Y, Li J, Wang Z. Unsupervised Visible-Infrared Person Re-identification under Unpaired Settings[C]//Proceedings of the IEEE International Conference on Computer Vision (ICCV). 2025: 4567-4576.\par
+\noindent[47] Asurada Y, Chen S, Liu M. X-ReID: Multi-granularity Information Interaction for Video-Based Visible-Infrared Person Re-identification[EB/OL]. [2025-11-17]. arXiv preprint arXiv:2511.17964.\par
+\noindent[48] Visuang T, Zhang L, Chen Y. Video-Level Language-Driven Video-Based Visible-Infrared Person Re-identification[EB/OL]. [2025-06-02]. arXiv preprint arXiv:2506.02439.\par
+\noindent[49] Zhang H, Liu Q, Li D. Event-based Video Person Re-identification via Cross-Modality and Temporal Collaboration[EB/OL]. [2025-01-07]. arXiv preprint arXiv:2501.07296.\par
+\noindent[50] VCM Project Team. Learning Modal-Invariant and Temporal-Memory for Video-based Visible-Infrared Person Re-Identification[EB/OL]. [2025-08-02]. arXiv preprint arXiv:2208.02450.\par
+\noindent[51] Seo J, Kim D, Lee S. Keypoint Mask-based Local Feature Matching and Keypoint Erasingbased Global Feature Representations for Visible-Infrared Person Re-Identification[C]//Proceedings of Machine Learning Research. 2024, 263: 3546-3561.\par
+\noindent[52] Shi H, Luo M, Zhang X Y, et al. Learning Cross-modality Information Bottleneck Representation for Heterogeneous Person Re-identification[EB/OL]. [2024-08-15]. arXiv preprint arXiv:2308.15063.\par
+\noindent[53] Zhang Y, Li W, Wang C. MCGS-ReID: A Visible-Infrared Vehicle Reidentification Method Using Modal-Cross Graph Sampler[J]. IEEE Access, 2024, 12: 108012-108015.
+
+
 
 
 \end{framed}
