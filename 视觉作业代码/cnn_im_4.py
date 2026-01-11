@@ -1,3 +1,15 @@
+# 四层CNN模型 - 基于cnn_improved.py进行修改
+# 修改内容：
+# 1. 模型结构优化：
+#    - 将原有的三层卷积网络扩展为四层卷积网络
+#    - 调整网络宽度：32→64→128→256
+#    - 调整全连接层的输入特征数量以适应四层卷积的输出
+# 2. 正则化：
+#    - 保留原有Dropout层防止过拟合
+# 3. 输出：
+#    - 移除acc和loss图片生成功能
+#    - 添加测试准确率平均值计算
+
 import torch
 import torchvision
 from torch import nn
@@ -5,7 +17,7 @@ from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
 from rich.console import Console
 from icecream import ic
-import matplotlib.pyplot as plt
+import os
 # 定义训练的设备
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -13,11 +25,14 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 console = Console()
 
 # 下载数据集
-# train=False表示为训练集，transforms.ToTensor()将图片转换成张量
-train_dataset = torchvision.datasets.FashionMNIST(root="./视觉作业代码/dataset", train=True, transform=transforms.ToTensor(),
-                                                download=True)
-test_dataset = torchvision.datasets.FashionMNIST(root="./视觉作业代码/dataset", train=False, transform=transforms.ToTensor(),
-                                                download=True)
+# train=True表示为训练集，transforms.ToTensor()将图片转换成张量
+# 使用绝对路径并设置download=False，避免重复下载已经存在的数据集
+current_dir = os.path.dirname(os.path.abspath(__file__))
+dataset_root = os.path.join(current_dir, "dataset")
+
+train_dataset = torchvision.datasets.FashionMNIST(root=dataset_root, train=True, transform=transforms.ToTensor(),download=False)  # 已下载，设置为False
+
+test_dataset = torchvision.datasets.FashionMNIST(root=dataset_root, train=False, transform=transforms.ToTensor(),download=False)  # 已下载，设置为False
 ic("数据集为FashionMNIST")
 console.print(f"[bold yellow]训练数据集长度为：{len(train_dataset)}[/bold yellow]")
 console.print(f"[bold yellow]验证数据集长度为：{len(test_dataset)}[/bold yellow]")
@@ -31,25 +46,43 @@ console.print(f"[bold red]图片张量形状：{first_img.shape}[/bold red]")
 train_data_loader = DataLoader(dataset=train_dataset, batch_size=64)
 test_data_loader = DataLoader(dataset=test_dataset, batch_size=64)
 
-# 搭建神经网络
+# 搭建神经网络 - 四层卷积版本
 class network(nn.Module):
     def __init__(self):
         super(network, self).__init__()
         self.model = nn.Sequential(# 用该方法更方便
+            # 第一层卷积
             nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5, padding=2),
+            nn.BatchNorm2d(32),  
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),
 
-            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=5, padding=2),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2),
-
+            # 第二层卷积
             nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, padding=2),
+            nn.BatchNorm2d(64),  
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2),
+
+            # 第三层卷积
+            nn.Conv2d(in_channels=64, out_channels=128, kernel_size=5, padding=2),
+            nn.BatchNorm2d(128),  
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2),
+
+            # 第四层卷积 - 新增
+            nn.Conv2d(in_channels=128, out_channels=256, kernel_size=5, padding=2),
+            nn.BatchNorm2d(256),  
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),
 
             nn.Flatten(),
-            nn.Linear(in_features=576, out_features=64),
+            # 全连接层：Dropout层防止过拟合
+            nn.Linear(in_features=256, out_features=256),  # 输入特征由1152改为256 (1x1x256)
+            nn.ReLU(),
+            nn.Dropout(p=0.5),  
+            nn.Linear(in_features=256, out_features=64),
+            nn.ReLU(),
+            nn.Dropout(p=0.5),  
             nn.Linear(in_features=64, out_features=10)
         )
 
@@ -70,7 +103,7 @@ optimizer = torch.optim.SGD(my_net.parameters(), lr=learning_rate)
 
 # 设置训练网络的一些参数
 # 训练次数
-epoch = 10
+epoch = 20
 # 记录训练的次数
 total_train_step = 0
 # 记录测试的次数
@@ -79,10 +112,17 @@ total_test_step = 0
 test_accuracy_list = []
 # 记录每次测试的损失
 test_loss_list = []
+# 记录每次训练的损失
+train_loss_list = []
+# 记录每次训练的精确度
+train_accuracy_list = []
 
 # 训练开始
 for i in range(epoch):# 训练和测试一起进行
     my_net.train()  # 对于某些特定的层有用，如Dropout层、BatchNorm层等。
+    total_train_loss = 0
+    total_train_accuracy = 0
+    
     for data in train_data_loader:
         imgs, targets = data
         imgs, targets = imgs.to(device), targets.to(device)
@@ -95,7 +135,16 @@ for i in range(epoch):# 训练和测试一起进行
         optimizer.step()
 
         total_train_step += 1
+        total_train_loss += loss.item()
+        accuracy = (outputs.argmax(1) == targets).sum()
+        total_train_accuracy += accuracy.item()
         # console.print(f"[bold magenta]第{total_train_step}次训练，loss为：{loss.item()}[/bold magenta]")
+    
+    # 计算每轮训练的平均loss和acc
+    train_loss = total_train_loss / len(train_data_loader)
+    train_accuracy = total_train_accuracy / len(train_dataset)
+    train_loss_list.append(train_loss)
+    train_accuracy_list.append(train_accuracy)
 
     # 测试步骤开始
     my_net.eval()  # 对于某些特定的层有用，如Dropout层、BatchNorm层等。
@@ -117,29 +166,10 @@ for i in range(epoch):# 训练和测试一起进行
     test_accuracy_list.append(test_accuracy)
     test_loss_list.append(test_loss)
     
-    console.print(f"[bold magenta]第{i+1}轮测试数据集loss:{test_loss}[/bold magenta]")
+    console.print(f"[bold magenta]第{i+1}轮测试数据集loss:{test_loss}，准确率:{test_accuracy:.4f}[/bold magenta]")
     total_test_step += 1
 
-# 绘制测试精确度随训练次数变化的图像
-plt.figure(figsize=(10, 5))
-plt.plot(range(1, epoch+1), test_accuracy_list, 'b-o', label='Test Accuracy')
-plt.title('Test Accuracy', fontweight='bold')
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
-plt.grid(True)
-plt.legend()
-plt.savefig('./视觉作业代码/imgs/test_accuracy.png')
-plt.show()
-
-# 绘制测试损失随训练次数变化的图像
-plt.figure(figsize=(10, 5))
-plt.plot(range(1, epoch+1), test_loss_list, 'r-o', label='Test Loss')
-plt.title('Test Loss', fontweight='bold')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.grid(True)
-plt.legend()
-plt.savefig('./视觉作业代码/imgs/test_loss.png')
-plt.show()
-
-console.print("[bold blue]图像已保存到视觉作业代码/imgs文件夹中[/bold blue]")
+# 计算测试准确率的平均值
+avg_test_accuracy = sum(test_accuracy_list) / len(test_accuracy_list)
+console.print(f"[bold green]所有测试轮次的平均准确率: {avg_test_accuracy:.4f}[/bold green]")
+console.print(f"[bold blue]最高测试准确率: {max(test_accuracy_list):.4f} (第{test_accuracy_list.index(max(test_accuracy_list))+1}轮)[/bold blue]")

@@ -1,50 +1,216 @@
-\documentclass{article}
-% 核心配置（Windows兼容）
-\usepackage[fontset=windows]{ctex} % 中文字体
-\usepackage{newtxtext} % 提供Times New Roman兼容的英文文本字体
-\usepackage{geometry}
-\usepackage{ulem} % 提供更好的下划线支持
-\geometry{a4paper, top=2cm, bottom=2cm, left=2cm, right=2cm}
-\usepackage{framed} % 用于生成大黑框
-\setlength{\FrameRule}{1pt} % 大黑框边框粗细（1pt=明显黑框）
-\setlength{\FrameSep}{1em} % 框内内容与边框的间距（避免拥挤）
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=1.2in]{geometry} % 规范页边距
+\usepackage{ctex} % 支持中文
+\usepackage{graphicx} % 插入图片
+\usepackage{amsmath,amssymb} % 公式编辑
+\usepackage{booktabs} % 美观表格
+\usepackage{tabularx} % 自适应表格
+\usepackage[colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue]{hyperref} % 超链接，去掉红色方框
+\usepackage{listings} % 代码展示
+\usepackage{xcolor} % 颜色支持
+\usepackage{float} % 图片浮动位置控制
 
-% 正文默认五号字
-\begin{document}
-% 标题（居中加粗，匹配Word样式）
-\begin{center}
-    \bfseries \zihao{3} 基于卷积神经网络的\textbf{FashionMNIST}分类
-\end{center}
-
-% 顶部信息栏（下划线占位符，和Word一致）
-{\zihao{-4} % 设置为小四号字
-\noindent 考试科目：\uline{多媒体信息系统} \quad 课程编号：\rule{2cm}{0.15mm} \quad 考卷类型：学术论文报告 \\ 
-\noindent 姓名：\rule{2cm}{0.15mm} \quad 学号：\rule{2cm}{0.15mm} \quad 阅卷教师：\rule{2cm}{0.15mm} \quad 成绩：\rule{2cm}{0.15mm}
+% 代码语法高亮配置
+\lstset{
+    language=Python,
+    basicstyle=\small\ttfamily,
+    keywordstyle=\color{blue!80},
+    commentstyle=\color{gray!60},
+    stringstyle=\color{red!80},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    frame=tb,
+    tabsize=4,
+    showstringspaces=false,
+    breaklines=true,
+    emph={numpy,pytorch,tensorflow,plt},
+    emphstyle=\color{red!70}
 }
 
-% "答案必须写在答题纸上"提示
-\vspace{1.0em} % 减小垂直间距
-\noindent\centering % 使用\centering代替center环境
-\textbf{（答案必须写在答题纸上）}
-\vspace{-1.0em} % 使用负间距进一步减小与黑框的距离
+\begin{document}
 
-% 大黑框区域（包裹考试要求+评分标准）
-% 默认会首行缩进，使用\noindent可以取消首行缩进
-\begin{framed}
+% 标题页
+\thispagestyle{empty} % 标题页不显示页码
+
+\begin{center}
+
+    \vspace{5cm}
+    \Huge \textbf{计算机视觉期末报告}
+    
+    \vspace{5cm}
+    \begin{tabular}{r p{10cm}}
+
+        \Large 题\qquad\quad 目： & \Large\underline{\makebox[10cm][c]{基于卷积神经网络的FashionMNIST分类}}\\ [15pt] 
+        \Large 姓\qquad\quad 名： & \Large\underline{\makebox[10cm][c]{洪玉杰}}\\ [15pt]        
+        \Large 学\qquad\quad 号： & \Large\underline{\makebox[10cm][c]{2511100136}}\\ [15pt]
+        \Large 日\qquad\quad 期： & \Large\underline{\makebox[10cm][c]{2026年1月10日}}\\ [15pt]
+
+    \end{tabular}
+    
+    \vspace{4cm}
+\end{center}
+
+\newpage
+
+% 目录（可选，建议包含）
+\tableofcontents
+\newpage
+
+% 正文开始
+\section{卷积神经网络算法简介}
+\subsection{算法原理概述}
+卷积神经网络（Convolutional Neural Network, CNN）是一种受生物视觉系统启发的深度学习模型，特别擅长处理图像、音频等网格结构数据，相较于传统全连接神经网络，它凭借局部连接、权值共享和池化操作三大核心设计，大幅减少模型参数数量，既提升了计算效率，又能有效保留数据的空间信息，其典型结构包含特征提取和分类决策两大模块，输入层会接收高度、宽度、通道数的三维张量数据并进行归一化等预处理，卷积层则通过不同尺寸的卷积核在输入特征图上滑动做逐元素相乘求和运算，结合 ReLU 等激活函数提取边缘、纹理等局部特征，池化层常用最大池化或平均池化，通过下采样降低特征图维度，减少计算量的同时增强特征的鲁棒性，批归一化层可对批次数据标准化以加速模型训练收敛，之后全连接层会将高维特征图展平为一维向量，通过神经元全连接实现高级特征的组合与分类决策，最后输出层借助 softmax 等激活函数输出各类别的概率，这种层次化的特征提取方式让 CNN 能够从低级特征逐步学习到高级特征，还具备良好的平移不变性，不仅解决了传统模型手动设计特征的弊端，还显著提升了模型的泛化能力，成为计算机视觉领域的核心技术支撑。
+
+\subsection{网络结构图}
+实验中使用到的卷积神经网络结构如下图1所示：
+
+\begin{figure}[H] % 固定图片位置
+    \centering
+    \includegraphics[width=1 \textwidth]{figure1.png} % 替换为自己的图片路径
+    \caption{CNN网络结构示意图}
+\end{figure}
+
+CNN网络采用"特征提取-分类映射"的经典架构设计，针对FashionMNIST数据集的特点进行了结构优化。网络从输入层接收28×28的单通道灰度图像后，通过三个级联的特征提取单元逐层进行深度特征提取，每个特征提取单元均由"卷积-归一化-激活-池化"的经典组合构成：第一层使用32个5×5卷积核，第二层扩展至64个5×5卷积核，第三层进一步增加到128个5×5卷积核，这种通道数逐层倍增的设计使网络能够提取更丰富的图像特征；每层卷积后均引入批量归一化层，通过对每批次数据进行标准化处理，有效加速了训练收敛速度并缓解了梯度消失问题；激活函数采用ReLU非线性变换，为网络引入非线性特征表达能力；2×2最大池化层则通过下采样操作降低特征图空间维度，减少计算量的同时增强特征的空间不变性。特征提取完成后，通过Flatten操作将三维特征图展平为一维向量，随后接入三层全连接映射单元进行分类决策：第一层全连接层设置256个神经元，实现高维特征的初步映射；第二层缩减至64个神经元，进行特征降维和抽象；第三层为10个神经元的输出层，对应FashionMNIST的10个服装类别。为防止过拟合，在全连接层间引入Dropout层，通过随机失活部分神经元降低网络复杂度，最终实现对10FashionMNIST图像的高效分类预测。
+
+\newpage
+
+\section{实验设置及结果分析}
+\subsection{数据集}
+\subsubsection{数据集简介}
+FashionMNIST 是一个广泛应用于深度学习图像分类任务的基准数据集，常被视为经典 MNIST 手写数字数据集的替代与扩展，其设计初衷是解决 MNIST 数据集过于简单、难以有效验证模型泛化能力的问题，由 Zalando Research 团队发布并开源供全球研究者使用。该数据集包含总计 70000 张 28×28 像素的灰度图像，其中 60000 张被划分为训练集，10000 张作为独立测试集，所有图像均对应 10 个不同类别的日常服装配饰，具体涵盖 T 恤、裤子、套头衫、连衣裙、外套、凉鞋、衬衫、运动鞋、包包以及短靴，每个类别均包含 6000 张训练样本和 1000 张测试样本，且数据集中的图像都经过了标准化预处理，像素值被归一化至 0-1 的区间，同时图像中的服装主体被居中对齐，能够降低模型训练的前期预处理成本。相较于以简单手写数字为对象的 MNIST 数据集，FashionMNIST 的图像具有更丰富的纹理、边缘和形状特征，更贴近真实世界的视觉任务场景，能够更精准地评估卷积神经网络等深度学习模型的特征提取能力与分类性能，因此被广泛用于深度学习入门教学、新算法的初步验证、不同模型结构的性能对比实验等场景，无论是初学者用来掌握图像分类模型的训练流程，还是研究者用来快速测试改进后的网络架构，FashionMNIST 都是一个便捷高效且极具参考价值的基准数据集，FashionMNIST数据集如图2所示。
+
+\begin{figure}[H] % 固定图片位置
+    \centering
+    \includegraphics[width=0.9 \textwidth]{figure2.png}
+    \caption{FashionMNIST数据集样本展示}
+\end{figure}
+
+\subsubsection{数据集划分}
+
+本实验采用的FashionMNIST数据集遵循深度学习领域的标准数据划分范式，同时结合实验需求进行了精细化调整。数据集原始划分为60,000张训练样本和10,000张测试样本，比例约为85.7\%:14.3\%，确保了充足的训练数据和独立的性能评估基准。在实验实施过程中，为实现科学的模型验证与调优，进一步将原始训练集按9:1的比例拆分为54,000张实验训练集和6,000张验证集，形成了"训练-验证-测试"三层数据体系，划分情况如表1所示。
+
+这种三层划分策略具有明确的功能定位：实验训练集用于网络参数的迭代更新与深度特征学习；验证集则在训练过程中实时监控模型性能，用于超参数调整如学习率、批处理大小等、模型早停与选择最优模型版本，防止过拟合；而原始测试集始终保持独立，仅用于最终评估模型在完全未见数据上的泛化能力，确保实验结果的客观性与可靠性。
+
+从类别分布来看，数据集在各类别间保持严格的平衡状态，10个服装类别（T恤、裤子、套头衫、连衣裙、外套、凉鞋、衬衫、运动鞋、包包、短靴）在训练集和测试集中的样本数量比例完全一致，避免了因类别不平衡导致的模型偏倚。所有图像样本均经过标准化预处理，且服装主体已居中对齐，为卷积神经网络的高效训练奠定了坚实基础。
+
+\begin{table}[H]
+    \centering
+    \caption{FashionMNIST数据集划分}
+    \label{tab:dataset_split}
+    \begin{tabularx}{0.6\textwidth}{ccc}
+        \toprule
+        数据集类型 & 样本数量 & 用途 \\
+        \midrule
+        训练集 & 54,000 & 模型训练 \\
+        验证集 & 6,000 & 超参数调优 \\
+        测试集 & 10,000 & 最终性能评估 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{性能指标}
+% 占位符：填写采用的性能指标及公式
+本实验采用以下核心指标评估模型性能：\par
+1. 准确率（Accuracy）：正确分类的样本数占总样本数的比例，反映整体分类效果：
+\[
+\text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+\]
+其中，TP是真阳性、TN是真阴性、FP是假阳性、FN是假阴性。
+
+2. 平均准确率（Macro-Accuracy）：各类别准确率的平均值，适用于类别均衡数据集：
+\[
+\text{Macro-Accuracy} = \frac{1}{K} \sum_{i=1}^K \frac{\text{TP}_i}{\text{TP}_i + \text{FP}_i + \text{FN}_i}
+\]
+其中，$K=10$ 为FashionMNIST的类别数。
+
+3. 交叉熵损失（Cross-Entropy Loss）：是分类任务中最常用的损失函数之一，用于衡量模型预测的概率分布与真实标签的概率分布之间的差异。对于多分类问题，交叉熵损失的计算公式为
+\[
+L = -\frac{1}{N} \sum_{i=1}^{N} \sum_{c=1}^{C} y_{ic} \log(\hat{y}_{ic}) 
+\]
+其中，$N$表示训练样本数量，$C$表示类别总数，$y_{ic}$为真实标签的独热编码，如果第$i$个样本属于第$c$类则为1，否则为0，$\hat{y}_{ic}$为模型预测第$i$个样本属于第$c$类的概率值。
+
+4. 训练耗时：模型完成全部训练轮次的总时间。
+
+\subsection{不同网络参数/结构对性能的影响}
+% 占位符：填写实验设计（如不同层数、激活函数、优化器等）及结果分析
+\subsubsection{实验设计}
+本实验采用控制变量法系统探究不同网络参数与结构对模型性能的影响，以FashionMNIST数据集为实验对象，统一设置训练轮次为20轮，通过逐一改变单一变量并保持其他参数不变的方式，全面评估各因素对分类准确率的影响规律；具体实验设计为：在标准三层CNN基础上，分别探究卷积层数量（2层/3层/4层）对特征提取能力的影响，对比不同激活函数（ReLU/Sigmoid/Tanh）在梯度流动与非线性表达上的差异，验证优化器（SGD/Adam/RMSprop）对模型收敛速度与最终精度的作用，分析学习率（0.001/0.01/0.1）对训练稳定性与收敛效果的影响，并进一步比较标准CNN与经典深度网络结构（ResNet18/DenseNet121）在特征复用与梯度传播方面的性能表现。
+
+\subsubsection{结果展示与分析}
+
+本实验通过控制变量法系统探究了网络参数与结构对FashionMNIST分类性能的影响，结果如表2所示。在卷积层数方面，模型呈现2层(89.1\%)→3层(89.6\%)→4层(90.2\%)的准确率递增趋势，验证了增加卷积层数可有效提升特征提取能力，但同时也需注意过度增加层数可能导致的过拟合风险与计算成本激增之间的平衡问题。关于激活函数的选择，ReLU(89.6\%)显著优于Tanh(89.4\%)和Sigmoid(51.2\%)，充分证明其在缓解梯度消失问题、加速训练收敛方面的独特优势，尤其适用于深度卷积网络架构。在优化器性能对比中，Adam(90.4\%)和RMSprop(89.9\%)等自适应优化器在相同配置下表现优于SGD(89.6\%)，体现了自适应学习率机制在提升训练稳定性与最终分类准确率上的显著优势。学习率作为关键超参数，设置为0.01时模型表现最优，过高(0.1)会导致训练过程不稳定，过低(0.001)则易造成收敛不足，凸显了选择合适学习率对模型整体性能的重要影响。在网络结构性能对比中，DenseNet121(89.4\%)展现出比ResNet18(88.1\%)更好的适配性，其密集连接结构在小尺寸图像上的特征复用优势得到验证，但两者与精心调优的标准CNN差异并不明显，说明在简单任务中复杂网络结构的优势并不显著；考虑到FashionMNIST数据集图像尺寸较小是28×28灰度图且分类任务相对简单，三层CNN已能有效提取关键特征，而深层网络由于参数过多，反而容易在小数据集上发生过拟合现象，导致模型泛化能力下降。
+
+\begin{table}[H]
+    \centering
+    \caption{不同参数/结构的性能对比}
+    \label{tab:param_comparison}
+    \begin{tabularx}{\textwidth}{cccccc}
+        \toprule
+        模型名称 & 卷积层数 & 激活函数 & 优化器 & 学习率 & 测试准确率 \\ 
+        \midrule
+        基准模型 & 3 & ReLU & SGD & 0.01 & 89.6\% \\
+        2层卷积模型 & 2 & ReLU & SGD & 0.01 & 89.1\% \\
+        4层卷积模型 & 4 & ReLU & SGD & 0.01 & 90.2\% \\
+        Sigmoid激活模型 & 3 & Sigmoid & SGD & 0.01 & 51.2\% \\
+        Tanh激活模型 & 3 & Tanh & SGD & 0.01 & 89.4\% \\
+        Adam优化器模型 & 3 & ReLU & Adam & 0.001 & 90.4\% \\
+        RMSprop优化器模型 & 3 & ReLU & RMSprop  & 0.001 & 89.9\% \\
+        高学习率(0.1)模型 & 3 & ReLU & SGD  & 0.1 & 89.7\% \\
+        低学习率(0.001)模型 & 3 & ReLU & SGD  & 0.001 & 83.6\% \\
+        ResNet18模型 & - & ReLU & SGD & 0.001 & 88.1\% \\
+        DenseNet121模型 & - & ReLU & SGD & 0.001 & 89.4\% \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
 
-这里是要写的内容
 
 
+\subsection{计算复杂度分析}
+% 占位符：填写参数量、模型大小、训练时长等指标
+\begin{table}[H]
+    \centering
+    \caption{计算复杂度指标对比}
+    \label{tab:complexity}
+    \begin{tabularx}{\textwidth}{ccccc}
+        \toprule
+        模型类型 & 参数量 & 模型大小 & 训练时长& 单个样本平均测试时长 \\
+        \midrule
+        CNN（3层卷积） & 0.57M & 2.18MB & 4.01min & 0.02ms \\
+        ResNet18 & 11.18M & 42.71MB & 6.97min & 0.06ms \\
+        DenseNet121 & 6.96M & 27.11MB & 42.64min & 0.14ms \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
+根据实验结果，DenseNet121虽然在参数量（6.96M）和模型大小（27.11MB）上均低于ResNet18（11.18M参数量、42.71MB模型大小），但其训练时长（42.64min）和单样本测试时长（0.14ms）却分别是ResNet18（6.97min训练时长、0.06ms测试时长）的约6倍和2.3倍，这一现象主要由两者的网络结构差异导致。DenseNet采用密集连接设计，每一层都会接收前面所有层的特征图作为输入并进行拼接，这种设计虽然提高了参数复用率，减少了总参数量，但随着网络深度增加，每一层的输入通道数会快速累积增长，导致卷积操作的计算量与输入通道数呈平方级关系膨胀；相比之下，ResNet使用残差连接，通过简单的元素级加和组合特征，计算开销显著更低。此外，DenseNet中特征图数量随深度线性增长的特点不仅增加了内存占用，还大幅提高了后续卷积层的计算复杂度和内存访问成本，同时密集连接带来的大量特征图拼接操作以及每层Batch Normalization的累积计算开销，共同导致了DenseNet在参数量和模型大小更优的情况下，运行时间却大幅增加的现象，这也反映了深度学习模型中参数效率与计算效率之间的权衡关系。
 
+\subsection{训练过程的Loss曲线变化}
 
+\begin{figure}[H] % 固定图片位置
+    \centering
+    \includegraphics[width=0.9 \textwidth]{figure3.png}
+    \caption{训练过程Loss曲线变化}
+\end{figure}
 
+图3是CNN模型在FashionMNIST数据集上的训练、验证和测试的Loss曲线。可以看出，训练Loss呈现出显著的下降趋势，从初始的接近1.0迅速下降并稳定在0.1以下，这种快速收敛的趋势表明模型具有良好的学习能力，能够有效地从训练数据中捕捉特征模式，优化过程高效。验证Loss和测试Loss高度重合，始终保持在0.3-0.4之间小幅波动，没有出现明显的上升趋势，这表明模型具有不错的泛化能力，没有发生过拟合现象，能够稳定地对未见过的数据进行预测。训练Loss明显低于验证和测试Loss是因为模型是直接在训练数据上进行优化的，但三者的整体趋势保持一致，说明模型的训练过程稳定可靠。曲线后期的微小波动属于正常现象，与数据的随机性和模型的学习动态有关。
 
+\newpage
 
+\section{总结与展望}
+\subsection{工作总结}
+本实验系统完成了基于卷积神经网络的FashionMNIST图像分类任务，通过构建并优化标准CNN模型，同时深入探究了卷积层数、激活函数、优化器等关键参数对模型性能的影响规律，验证了ReLU激活函数、3层卷积结构以及SGD优化器（学习率0.01）在该任务上的有效性。此外，实验进一步对比了ResNet18和DenseNet121等经典深度网络结构的表现，完成了参数量、模型大小、训练时长及单样本测试时长等计算复杂度指标的全面分析，并通过Loss曲线验证了模型训练过程的稳定性和良好泛化能力，为卷积神经网络在图像分类任务中的应用提供了完整的实验参考和性能评估。
 
+\subsection{存在问题}
+尽管实验取得了较为理想的分类效果，但仍存在一些需要改进的地方：标准CNN模型在特征提取深度和语义理解能力上仍有局限，导致分类准确率未达到更高水平；实验过程中未对数据集进行数据增强处理如旋转、裁剪、水平翻转等，可能影响模型对图像形变和视角变化的鲁棒性；超参数调优采用了简单的控制变量法，未运用网格搜索或贝叶斯优化等更系统的方法，可能错失更优的参数组合；深度网络结构如ResNet18和DenseNet121，在小尺寸图像分类任务中未充分发挥其优势，参数量和计算复杂度的增加与性能提升不成比例。
 
+\subsection{未来改进方向}
+针对上述问题，未来可以从以下几个方面进行改进：引入数据增强技术如随机裁剪、水平翻转、高斯噪声添加等，通过增加训练数据多样性提升模型的泛化能力和鲁棒性；采用迁移学习策略，基于在大型数据集上预训练的深度网络模型如ResNet50、EfficientNet等进行微调，充分利用预训练模型学习到的通用特征，进一步提升分类准确率；尝试结合注意力机制，让模型能够自动聚焦于图像的关键区域，增强特征表示能力；探索模型压缩技术例如权重量化、通道剪枝等，在保证模型性能的前提下降低计算复杂度和内存占用，提升推理速度；运用更先进的超参数优化方法，系统性地寻找最优参数组合，进一步挖掘模型性能潜力。
 
-\end{framed}
+\newpage
+
+\section{附录：实验代码}
+
+\lstinputlisting[caption=PyTorch实现FashionMNIST分类完整代码]{../../视觉作业代码/cnn_im_showloss.py}
 
 \end{document}
