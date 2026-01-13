@@ -1,0 +1,53 @@
+# Linux学习笔记
+## 一、一些shell命令
+- ls: 列出当前目录下的文件和子目录
+  - ls -a: 列出所有文件，包括隐藏文件，例如以.开头的文件
+  - ls -l: 以长格式列出文件和目录，包括权限、所有者、大小、修改时间等信息
+  - ls path: 列出path目录下的文件和子目录
+- cd: 切换当前目录
+- pwd: 显示当前所在目录的路径
+- clear: 清除屏幕上的内容，使命令行界面更加清晰
+- uname: 显示系统信息，例如内核版本、操作系统名称等
+- cat: 查看文件内容
+  - cat filename: 查看filename文件的内容
+  - cat path/filename: 查看path目录下filename文件的内容
+- sudo: 以超级用户权限执行命令
+  - sudo apt-get install package: 安装package软件包
+  - sudo su: 切换到超级用户（root）权限     
+  - exit: 退出root权限
+- ctrl+c：中断终端命令，在执行命令的过程中，如果需要中断命令的执行，可以使用Ctrl+C组合键。
+- touch: 创建一个空文件
+  - touch filename: 创建一个空文件filename
+- cp: 复制文件
+  - cp filename1 filename2: 复制文件filename1到filename2
+- rm: 删除文件
+  - rm filename: 删除文件filename
+- mkdir: 创建目录(创建文件夹)
+  - mkdir dirname: 创建目录dirname
+  - rmdir dirname: 删除空目录dirname
+  - rm -r dirname: 删除非空目录dirname    
+- mv: 移动文件，文件重命名       
+  - mv filename1 filename2: 移动文件filename1到filename2，相当于是将filename1重命名为filename2
+  - mv dirname1 dirname2: 移动目录dirname1到dirname2
+  - mv filename dirname: 移动文件filename到目录dirname
+- ifconfig: 显示网络接口信息
+- reboot: 重启系统
+- poweroff: 关闭系统
+- sync: 同步内存中的数据到硬盘
+- find: 查找文件或目录
+  - find -name filename: 在当前目录下查找文件名(filename)，这里是省略了查找起始路径，默认用当前目录 .
+  - find path -name filename: 在path目录下查找文件名(filename)
+- ./:是 .（当前目录）和 /（Linux 路径分隔符）的结合，核心作用是明确指定「当前目录下的某个文件 / 程序」
+- .:. 是 Linux 中对「当前你所在的目录」的简写符号，是最基础、最常用的路径标识，没有任何额外操作，单纯指代目录本身。
+- du: 显示目录或文件的磁盘占用空间
+  - du -h: 以人类可读的格式显示磁盘占用空间，例如1K、2M、3G等
+  - du -h filename: 显示filename文件的磁盘占用空间，-h 表示人类可读的格式
+  - du -sh dirname: 显示dirname目录的磁盘占用空间
+    - -s:只显示目录占用空间的大小，不要显示其下子目录和文件占用的大小。
+- gedit: 打开文本编辑器，用于编辑文本文件
+  - gedit filename: 打开filename文件，用于编辑
+- top: 显示系统资源占用情况，包括CPU、内存、进程等
+  - 按q键退出top界面
+- file: 显示文件类型
+  - file filename: 显示filename文件的类型
+## 二、安装软件的方法
