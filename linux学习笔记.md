@@ -107,5 +107,13 @@
 常用的压缩扩展名有.tar、.tar.gz、.tar.bz2等。
 ### gzip压缩工具
 gzip工具负责压缩.gz格式的文件
+- gzip filename: 压缩filename文件，生成filename.gz文件
+- gzip -d filename.gz: 解压缩filename.gz文件，生成filename文件
+- gzip -r dirname: 递归压缩dirname目录下的所有文件，只是对目录下的文件进行压缩，不提供打包服务。
+- gzip -rd dirname.gz: 递归解压缩dirname.gz目录下的所有文件，生成dirname目录
 ### bzip2压缩工具
 bzip2工具负责压缩.bz2格式的文件
+- bzip2 filename: 压缩filename文件，生成filename.bz2文件
+- bzip2 -d filename.bz2: 解压缩filename.bz2文件，生成filename文件
+也只是压缩目录下的文件，不提供打包服务。
+### tar打包工具
