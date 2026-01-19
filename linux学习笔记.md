@@ -55,6 +55,11 @@
 - 下载.deb软件包
   - 下载.deb文件到本地，例如package.deb
   - sudo dpkg -i package.deb: 安装package.deb软件包
+- 删除.deb软件包安装的软件
+```bash
+dpkg -l | grep package # 先查看package软件包的包名
+sudo apt purge package # 彻底删除软件，包括配置文件
+```
 ## 三、vim编辑器的使用
 - vim filename（vi filename）: 新建一个文件filename，进入vim编辑器。
 一般刚刚进入vim编辑器时，默认是以只读模式打开文档，要编辑的话得切换到输入模式。
@@ -117,3 +122,19 @@ bzip2工具负责压缩.bz2格式的文件
 - bzip2 -d filename.bz2: 解压缩filename.bz2文件，生成filename文件
 也只是压缩目录下的文件，不提供打包服务。
 ### tar打包工具
+- v: 显示打包过程中的详细信息
+- c: 创建一个新的tar包
+- j: 压缩/解压缩tar包中的文件，使用bzip2压缩算法
+- z: 压缩/解压缩tar包中的文件，使用gzip压缩算法
+- f: 指定tar包的文件名
+- x: 从tar包中提取文件
+```bash
+# 先创建tar包，再压缩tar包
+tar -vcjf test1.tar.bz2 test1 # 压缩成.bz2的形式
+tar -vczf test1.tar.gz test1 # 压缩成.gz的形式
+
+# 解压缩文件
+tar -vxjf test1.tar.bz2 # 解压缩.bz2的形式
+tar -vxzf test1.tar.gz # 解压缩.gz的形式
+``` 
+
