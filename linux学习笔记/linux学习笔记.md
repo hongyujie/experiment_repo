@@ -1,4 +1,5 @@
 # Linux学习笔记
+参考文档为：【正点原子】I.MX6U嵌入式Linux驱动开发指南V1.81.pdf
 ## 一、一些shell命令
 - ls: 列出当前目录下的文件和子目录
   - ls -a: 列出所有文件，包括隐藏文件，例如以.开头的文件
@@ -50,6 +51,8 @@
   - 按q键退出top界面
 - file: 显示文件类型
   - file filename: 显示filename文件的类型
+- echo: 输出文本
+  - echo "hello world": 输出hello world
 ## 二、安装软件的方法
 - sudo apt-get install package(sudo apt install package): 安装package软件包
 - 下载.deb软件包
@@ -137,4 +140,97 @@ tar -vczf test1.tar.gz test1 # 压缩成.gz的形式
 tar -vxjf test1.tar.bz2 # 解压缩.bz2的形式
 tar -vxzf test1.tar.gz # 解压缩.gz的形式
 ``` 
+## 六 Linux下用户权限管理（文档2.7）
+在安装 Ubuntu 系统的时候会要求创建一个账户,当我们创建好账号以后,系统会在目录/home 下以该用户名创建一个文件夹,所有与该用户有关的文件都会被存储在这个文件文件夹中。同样的,创建其它用户账号的时候也会在目录/home 下生成一个文件夹来存储该用户的文件。装系统的时候创建的用户其权限比后面创建的用户大一点,但是没有 root 用户权限大,Ubuntu 下用户类型分为以下 3 类:
+- 初次创建的用户,此用户可以完成比普通用户更多的功能。
+- 普通用户,安装完操作系统之后被创建的用户，此用户只能完成普通的文件操作,不能进行系统管理等操作。
+- root 用户,此用户是系统管理员,可以完成所有的系统管理操作,如安装软件、配置网络等。
+在下面这个图里，显示了桌面一些文件的权限：
+>-rw-rw-r-- 1 hong hong         0 1月  20 15:30 a.c
 
+在这一行中，前面“-rw-rw-r--”表示文件的权限，三个为一组分别对应文件所有者、文件所有者所在组、其他用户的权限。例如“rw-”是文件所有者hong的权限，“rw-”是文件所有者所在组hong的权限，“r--”是其他用户的权限。
+![alt text](image-1.png)
+权限对应的二进制数字如下图所示，例如101->r-x，表示文件可以被读被执行，不能被写。
+![alt text](image.png)
+文件权限修改字母表示方式：
+![alt text](image-2.png)
+![alt text](image-3.png)
+权限管理命令：
+```bash
+# 权限修改命令chmod
+# chmod [参数] [文件名/目录名]
+chmod 755 filename # 给filename文件设置权限为755
+chmod g+w filename # 给filename文件的文件所有者所在组添加写权限
+
+# 命令 chown 用来修改某个文件或者目录的归属者用户或者用户组
+# chown [参数] [用户名/用户组名] [文件名/目录名]
+chown root filename # 把filename文件的归属者用户改为root
+```
+## 七 Makefile基础（文档3.3）
+当源码文件比较多的时候就不适合通过gcc直接编译，因为每次修改一个文件都需要重新编译所有的文件，效率比较低。这时候就需要一个自动化的编译工具。<br>
+make工具：一般指的是GNU Make工具，用于将源代码文件编译成可执行的二进制文件，make工具主要用于完成自动化编译。make工具编译的时候需要Makefile文件提供编译文件。<br>
+Makefile文件：make工具使用的文件，指明了编译规则。<br>
+简单Makefile示例：
+```bash
+# 先定义一个Makefile文件，用来存放代码，名字必须为Makefile
+  main: main.o input.o calcu.o 
+    gcc -o main main.o input.o calcu.o
+  main.o: main.c
+    gcc -c main.c
+  input.o: input.c
+    gcc -c input.c
+  calcu.o: calcu.c
+    gcc -c calcu.c
+
+  clean:
+    rm *.o
+    rm main
+```
+Makefile规格格式如下：命令前都需要有一个tab键
+> 目标...... : 依赖文件集合......
+> [tab] 命令 1
+>       命令 2
+>       ......
+
+例如下面这个规则：
+>  main: main.o input.o calcu.o 
+>    gcc -o main main.o input.o calcu.o
+
+规则的目标是 main，main.o、input.o 和 calcu.o 是生成 main 的依赖文件，如果要更新目标 main，就必须先更新它的所有依赖文件（main.o、input.o 和 calcu.o）,如果依赖文件中的任何一个有更新,那么目标也必须更新,“更新”就是执行一遍规则中的命令列表。<br>
+>  clean:
+>    rm *.o
+>    rm main
+
+这个规则,它没有依赖文件,因此会默认为依赖文件都是最新的,所以其对应的命令不会执行,当我们想要执行 clean 的话可以直接使用命令“make clean”,执行以后就会删除当前目录下所有的.o 文件以及 main,因此 clean 的功能就是完成工程的清理<br>
+Makefile 编写好以后我们就可以使用 make 命令来编译我们的工程了,直接在命令行中输入“make”即可,make 命令会在当前目录下查找是否存在“Makefile”这个文件,如果存在的话就会按照 Makefile 里面定义的编译方式进行编译<br>
+
+Make 的执行过程，目的就是要实现自动化编译。
+1. make 命令会在当前目录下查找以 Makefile(makefile 其实也可以)命名的文件。
+2. 当找到 Makefile 文件以后就会按照 Makefile 中定义的规则去编译生成最终的目标文件。
+3. 当发现目标文件不存在,或者目标所依赖的文件比目标文件新(也就是最后修改时间比目标文件晚)的话就会执行后面的命令来更新目标。
+### Makefile语法（文档3.4）
+## 八 shell脚本（视频正点源子linux第一期第18讲）
+shell脚本就是将终端中一条一条输入的命令放入一个脚本文件中,然后通过执行这个脚本文件来完成一系列的命令操作。<br>
+### shell脚本语法
+shell脚本是纯文本文件，命令从上往下执行，脚本扩展名为.sh，同时脚本第一行一定要为：`#!/bin/bash`，表示使用bash shell来执行脚本中的命令。<br>
+下面展示简单的一个shell脚本的创建和运行：
+```bash
+# 先创建一个shell脚本文件，名字为test.sh
+touch test.sh
+# 给test.sh文件添加可执行权限
+chmod +x test.sh
+# 编辑test.sh文件，添加以下内容
+#!/bin/bash
+echo "hello world"
+# 运行test.sh脚本
+./test.sh
+```
+先是创建一个shell脚本，通过ls可以发现这个创建的脚本没有可执行的权限。
+![alt text](image-4.png)
+通过chmod +x test.sh给test.sh文件添加可执行权限后，就可以通过./test.sh来运行这个脚本了。
+![alt text](image-5.png)
+通过vim打开脚本文件，在里面输入了一些内容
+![alt text](image-6.png)
+最后运行结果
+![alt text](image-7.png)
+剩下其他用法等后面用到再仔细研究。
