@@ -116,4 +116,31 @@ bzip2工具负责压缩.bz2格式的文件
 - bzip2 filename: 压缩filename文件，生成filename.bz2文件
 - bzip2 -d filename.bz2: 解压缩filename.bz2文件，生成filename文件
 也只是压缩目录下的文件，不提供打包服务。
-### tar打包工具
+
+## 通配符 `?` 和 `*` 用法
+- `?`  通配符：匹配任意一个字符
+例如：`data?.txt` 可以匹配：
+  -  `data1.txt`✅
+  -  `dataa.txt`✅
+  -  `dataX.txt`✅
+
+  但不能匹配：
+  -  `data12.txt`（多了一个字符）❌ 
+  -  `data.txt`（少了一个字符）❌
+<br>
+- `*` 通配符：匹配任意多个字符，包括0个字符
+例如：`data*.txt` 可以匹配：
+  - ✅ `data.txt`（0 个字符）
+  - ✅ `data1.txt`
+  - ✅ `data123.txt`
+  - ✅ `data_backup.txt`
+
+几乎所有以 `data` 开头、`.txt` 结尾的文件名都能匹配。
+```bash
+ls log?.log
+# 会匹配 log1.log、logA.log，但不会匹配 log12.log
+ls *.txt
+# 列出所有以.txt结尾的文件
+rm *.tmp
+# 删除所有以.tmp结尾的文件
+```
