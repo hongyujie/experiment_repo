@@ -144,3 +144,9 @@ ls *.txt
 rm *.tmp
 # 删除所有以.tmp结尾的文件
 ```
+## 进入正点原子出厂Linux系统方法
+1. 先将启动方式设置为EMMC启动
+2. 使用usb线连接USB_TTL接口
+3. 配置电脑端串口，使用的软件为MobaXterm，配置方式参考下面的图：
+![alt text](image.png)
+正点原子出厂系统 root 账号默认无密码，回车后直接登录成功，终端出现 root@ATK-IMX6U:~# 提示符
