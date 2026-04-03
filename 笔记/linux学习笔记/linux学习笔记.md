@@ -150,3 +150,9 @@ rm *.tmp
 3. 配置电脑端串口，使用的软件为MobaXterm，配置方式参考下面的图：
 ![alt text](image.png)
 正点原子出厂系统 root 账号默认无密码，回车后直接登录成功，终端出现 root@ATK-IMX6U:~# 提示符
+
+## 利用MobaXterm发送文件到开发板
+1. 先在开发板输入`rz`表示开发板进入接收状态
+2. 在MobaXterm终端界面，右击选择Send file using Zmodem
+3. 等文件传输完，执行`chmod +x led`，给led文件添加可执行权限
+4. ./led执行程序
